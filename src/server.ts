@@ -6,6 +6,7 @@ import { createServer } from "http";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { typeDefs, resolvers } from "./schema";
 import client from "./client";
+import { getUser } from "./users/users.utils";
 
 const startServer = async () => {
 	const app = express();
@@ -14,10 +15,13 @@ const startServer = async () => {
 	const schema = makeExecutableSchema({ typeDefs, resolvers });
 	const apolloServer = new ApolloServer({
 		schema,
-		context: async () => {
-			return {
-				client,
-			};
+		context: async ({ req }) => {
+			if (req) {
+				return {
+					loggedInUser: await getUser(req.headers.token),
+					client,
+				};
+			}
 		},
 	});
 	await apolloServer.start();

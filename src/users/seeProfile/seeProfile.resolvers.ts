@@ -1,13 +1,16 @@
 import { Resolvers } from "../../types";
+import { protectResolver } from "../users.utils";
 
 const resolvers: Resolvers = {
 	Query: {
-		seeProfile: async (_: any, { username }, { client }) =>
-			await client.user.findUnique({
-				where: {
-					username,
-				},
-			}),
+		seeProfile: protectResolver(
+			async (_: any, { username }, { client }) =>
+				await client.user.findUnique({
+					where: {
+						username,
+					},
+				})
+		),
 	},
 };
 

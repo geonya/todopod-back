@@ -1,0 +1,29 @@
+import { Resolvers } from "../../types";
+import { compare } from "bcrypt";
+import { sign } from "jsonwebtoken";
+
+const resolvers: Resolvers = {
+	Mutation: {
+		login: async (_: any, { username, password }, { client }) => {
+			const user = await client.user.findUnique({ where: { username } });
+			if (!user) {
+				return {
+					ok: false,
+				};
+			}
+			const passwordOk = await compare(password, user.password);
+			if (!passwordOk) {
+				return {
+					ok: false,
+				};
+			}
+			const token = sign({ id: user.id }, process.env.SECRET_KEY);
+			return {
+				ok: true,
+				token,
+			};
+		},
+	},
+};
+
+export default resolvers;
