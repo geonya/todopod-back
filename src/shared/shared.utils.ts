@@ -12,6 +12,16 @@ export const uploadToS3 = async (
 	userId: number,
 	folderName: string
 ) => {
-	const { fileName, createReadStream } = await file;
-	console.log(fileName, createReadStream);
+	const { filename, createReadStream } = await file;
+	const readStream = createReadStream();
+	const objectName = `${folderName}/${userId}-${Date.now()}-${filename}`;
+	const { Location } = await new AWS.S3()
+		.upload({
+			Bucket: "todopod",
+			Key: objectName,
+			ACL: "public-read",
+			Body: readStream,
+		})
+		.promise();
+	return Location;
 };

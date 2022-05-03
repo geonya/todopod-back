@@ -1,15 +1,15 @@
-import { Resolvers } from "../../types";
 import { protectResolver } from "../users.utils";
 import { hash } from "bcrypt";
 import { uploadToS3 } from "../../shared/shared.utils";
+import { GraphQLUpload } from "graphql-upload";
 
-const resolvers: Resolvers = {
+export default {
 	Mutation: {
 		editProfile: protectResolver(
 			async (
-				_: any,
+				_,
 				{ username, email, password: newPassword, avatar },
-				{ client, loggedInUser }
+				{ prisma, loggedInUser }
 			) => {
 				let hashedPassword = null;
 				if (newPassword) {
@@ -19,7 +19,7 @@ const resolvers: Resolvers = {
 				if (avatar) {
 					avatarUrl = await uploadToS3(avatar, loggedInUser.id, "avatars");
 				}
-				const updatedUser = await client.user.update({
+				const updatedUser = await prisma.user.update({
 					where: {
 						id: loggedInUser.id,
 					},
@@ -27,6 +27,7 @@ const resolvers: Resolvers = {
 						username,
 						email,
 						...(hashedPassword && { password: hashedPassword }),
+						...(avatarUrl && { avatar: avatarUrl }),
 					},
 				});
 				if (updatedUser.id) {
@@ -42,6 +43,5 @@ const resolvers: Resolvers = {
 			}
 		),
 	},
+	Upload: GraphQLUpload,
 };
-
-export default resolvers;

@@ -4,8 +4,8 @@ import { sign } from "jsonwebtoken";
 
 const resolvers: Resolvers = {
 	Mutation: {
-		login: async (_: any, { username, password }, { client }) => {
-			const user = await client.user.findUnique({ where: { username } });
+		login: async (_: any, { username, password }, { prisma }) => {
+			const user = await prisma.user.findUnique({ where: { username } });
 			if (!user) {
 				return {
 					ok: false,

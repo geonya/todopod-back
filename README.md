@@ -1,4 +1,4 @@
-# todopod
+# todopod backend
 
 - ultimate project managing app
 
@@ -31,19 +31,19 @@
   - [x] sign & verify token
   - [x] getUser -> loggedInUser
   - [x] Protect Resolver
-- [ ] Edit Profile
+- [x] Edit Profile
   - [x] username, password, email
-  - [ ] avatar upload (AWS S3)
-    - **Post error**
-- [ ] Change Avatar
+  - [x] avatar upload (AWS S3)
+    - **Post error** :: pkg GraphQL-upload problem
+- [x] Change Avatar
 
 ## Project :
 
-- [ ] Create Project
-- [ ] Edit Project
-
-- [ ] Delete Project
-- [ ] See Project
+- [x] Create Project
+  - [x] connect or create Client
+- [x] Edit Project
+- [x] Delete Project
+- [x] See Project
 - [ ] See Hashtag
 - [ ] Search Project
 - [ ] See ToDos
@@ -51,6 +51,14 @@
 
 ## ToDo :
 
-- [ ] Create toDo
-- [ ] Edit toDo
+- [x] Create toDo
+- [x] Edit toDo
 - [ ] Delete toDo
+
+## Photo :
+
+- [ ] Upload Photo
+
+## Hashtag :
+
+- [ ] Create Hashtag

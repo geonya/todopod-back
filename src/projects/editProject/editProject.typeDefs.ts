@@ -2,12 +2,12 @@ import { gql } from "apollo-server-express";
 
 export default gql`
 	type Mutation {
-		editProfile(
-			username: String
-			email: String
-			password: String
-			avatar: Upload
+		editProject(
+			id: Int!
+			title: String
+			description: String
+			clientName: String
+			deadline: String
 		): MutationResponse!
 	}
-	scalar Upload
 `;

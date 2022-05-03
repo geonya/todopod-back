@@ -6,10 +6,10 @@ const resolvers: Resolvers = {
 		createAccount: async (
 			_: any,
 			{ username, email, password },
-			{ client }
+			{ prisma }
 		) => {
 			try {
-				const existingUser = await client.user.findUnique({
+				const existingUser = await prisma.user.findUnique({
 					where: {
 						username,
 					},
@@ -21,7 +21,7 @@ const resolvers: Resolvers = {
 					};
 				}
 				const hashedPassword = await bcrypt.hash(password, 10);
-				await client.user.create({
+				await prisma.user.create({
 					data: {
 						username,
 						email,
