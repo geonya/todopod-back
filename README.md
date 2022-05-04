@@ -44,15 +44,17 @@
 - [x] Edit Project _220503_
 - [x] Delete Project _220503_
 - [x] See Project _220503_
-- [ ] Search Project
-- [ ] See ToDos
-- [ ] See Deadline
+- [x] Search Projects _220504_
+  - [x] using contains
+  - [ ] `previewFeatures = ["fullTextSearch"]` ?
 
 ## ToDo :
 
 - [x] Create toDo _220503_
 - [x] Edit toDo _220503_
 - [x] Delete toDo _220504_
+- [x] See ToDos _220504_
+- [x] See ToDo _220504_
 
 ## Hashtag
 
@@ -61,7 +63,9 @@
   - [x] project description _220504_
   - [x] todo work _220504_
   - [x] photo caption _220504_
-- [ ] See hashtag
+- [x] See hashtag _220504_
+- [x] See hashtags _220504_
+- [ ] hashtag data(projects, todos, photos) pagination ?
 
 ## Photo :
 
@@ -69,3 +73,19 @@
 - [x] See Photo _220504_
 - [x] Edit Photo _220504_
 - [x] Delete Photo & AWS S3 cascade delete (avatars, photos) _220504_
+      https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#deleteObject-property
+
+## Document :
+
+- [ ] Upload Photo to AWS S3
+- [ ] See Doc
+- [ ] Edit Doc
+- [ ] Delete Doc & AWS S3 cascade delete
+
+## Comment :
+
+- [ ] Create Comment
+- [ ] Edit Comment
+- [ ] Delete Comment
+- [ ] See Comments
+- [ ] See Comment

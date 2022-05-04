@@ -9,5 +9,8 @@ export default gql`
 		projects: [Project]
 		toDos: [ToDo]
 		photos: [Photo]
+		projectsCount: Int!
+		toDosCount: Int!
+		photosCount: Int!
 	}
 `;
