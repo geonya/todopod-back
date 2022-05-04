@@ -7,6 +7,10 @@ AWS.config.update({
 	},
 });
 
+const AWS_S3 = new AWS.S3();
+const Bucket = "todopod";
+const ACL = "public-read";
+
 export const uploadToS3 = async (
 	file: any,
 	userId: number,
@@ -17,11 +21,32 @@ export const uploadToS3 = async (
 	const objectName = `${folderName}/${userId}-${Date.now()}-${filename}`;
 	const { Location } = await new AWS.S3()
 		.upload({
-			Bucket: "todopod",
+			Bucket,
 			Key: objectName,
-			ACL: "public-read",
+			ACL,
 			Body: readStream,
 		})
 		.promise();
 	return Location;
+};
+
+export const deleteFromS3 = async (fileUrl: string, folderName: string) => {
+	const decodeUrl = decodeURI(fileUrl);
+	const fileName = decodeUrl.split(`/${folderName}/`)[1];
+	const objectName = `${folderName}/${fileName}`;
+	await AWS_S3.deleteObject({
+		Bucket,
+		Key: objectName,
+	}).promise();
+};
+
+export const makeHashtags = (content: string) => {
+	const foundHashtags = content.match(/#[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|\w-]+/g);
+	const cleanedHashtags = foundHashtags?.map((hashtag: string) =>
+		hashtag.replace("#", "")
+	);
+	return cleanedHashtags?.map((hashtag: string) => ({
+		where: { hashtag },
+		create: { hashtag },
+	}));
 };

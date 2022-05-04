@@ -1,30 +1,26 @@
-import { makeHashtags } from "../../shared/shared.utils";
+import { AWS_S3_FOLDER } from "../../shared/shared.data";
+import { makeHashtags, uploadToS3 } from "../../shared/shared.utils";
 import { Resolvers } from "../../types";
 import { protectResolver } from "../../users/users.utils";
 
 const resolvers: Resolvers = {
 	Mutation: {
-		createToDo: protectResolver(
+		uploadPhoto: protectResolver(
 			async (
 				_: any,
-				{ work, projectId, deadline },
+				{ file, caption, projectId },
 				{ prisma, loggedInUser }
 			) => {
-				const existingProject = await prisma.project.findUnique({
-					where: { id: projectId },
-					select: { id: true },
-				});
-				if (!existingProject) {
-					return {
-						ok: false,
-						error: "project not found.",
-					};
-				}
+				const fileUrl = await uploadToS3(
+					file,
+					loggedInUser.id,
+					AWS_S3_FOLDER.photo
+				);
 				let hashtagsObjs = [];
-				if (work) {
-					hashtagsObjs = makeHashtags(work);
+				if (caption) {
+					hashtagsObjs = makeHashtags(caption);
 				}
-				await prisma.toDo.create({
+				return prisma.photo.create({
 					data: {
 						user: {
 							connect: {
@@ -36,16 +32,13 @@ const resolvers: Resolvers = {
 								id: projectId,
 							},
 						},
+						file: fileUrl,
+						caption,
 						...(hashtagsObjs.length > 0 && {
 							hashtags: { connectOrCreate: hashtagsObjs },
 						}),
-						work,
-						deadline,
 					},
 				});
-				return {
-					ok: true,
-				};
 			}
 		),
 	},

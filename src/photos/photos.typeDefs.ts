@@ -6,9 +6,9 @@ export default gql`
 		createdAt: String!
 		updatedAt: String!
 		user: User!
+		project: Project!
 		file: String!
 		caption: String
 		hashtags: [Hashtag]
-		project: Project!
 	}
 `;

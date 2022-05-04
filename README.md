@@ -39,26 +39,33 @@
 
 ## Project :
 
-- [x] Create Project
-  - [x] connect or create Client
-- [x] Edit Project
-- [x] Delete Project
-- [x] See Project
-- [ ] See Hashtag
+- [x] Create Project _220503_
+  - [x] connect or create Client _220503_
+- [x] Edit Project _220503_
+- [x] Delete Project _220503_
+- [x] See Project _220503_
 - [ ] Search Project
 - [ ] See ToDos
 - [ ] See Deadline
 
 ## ToDo :
 
-- [x] Create toDo
-- [x] Edit toDo
-- [ ] Delete toDo
+- [x] Create toDo _220503_
+- [x] Edit toDo _220503_
+- [x] Delete toDo _220504_
+
+## Hashtag
+
+- [x] Create hashtag
+  - [x] makeHashtags utility function _220504_
+  - [x] project description _220504_
+  - [x] todo work _220504_
+  - [x] photo caption _220504_
+- [ ] See hashtag
 
 ## Photo :
 
-- [ ] Upload Photo
-
-## Hashtag :
-
-- [ ] Create Hashtag
+- [x] Upload Photo to AWS S3 _220504_
+- [x] See Photo _220504_
+- [x] Edit Photo _220504_
+- [x] Delete Photo & AWS S3 cascade delete (avatars, photos) _220504_
