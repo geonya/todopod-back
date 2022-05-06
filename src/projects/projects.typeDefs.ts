@@ -11,7 +11,6 @@ export default gql`
 		client: Client
 		toDos: [ToDo]
 		hashtags: [Hashtag]
-		comments: [Comment]
 		deadline: String
 		docs: [Doc]
 	}

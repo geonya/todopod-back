@@ -77,15 +77,9 @@
 
 ## Document :
 
-- [ ] Upload Photo to AWS S3
-- [ ] See Doc
+- [x] Upload Photo to AWS S3
+- [x] See Doc
 - [ ] Edit Doc
 - [ ] Delete Doc & AWS S3 cascade delete
 
-## Comment :
-
-- [ ] Create Comment
-- [ ] Edit Comment
-- [ ] Delete Comment
-- [ ] See Comments
-- [ ] See Comment
+#### comment 보류
