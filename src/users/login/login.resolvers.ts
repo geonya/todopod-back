@@ -9,12 +9,14 @@ const resolvers: Resolvers = {
 			if (!user) {
 				return {
 					ok: false,
+					error: "User not found.",
 				};
 			}
 			const passwordOk = await compare(password, user.password);
 			if (!passwordOk) {
 				return {
 					ok: false,
+					error: "Password Error",
 				};
 			}
 			const token = sign({ id: user.id }, process.env.SECRET_KEY);

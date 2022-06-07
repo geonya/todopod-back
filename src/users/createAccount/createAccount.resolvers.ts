@@ -1,5 +1,5 @@
-import { Resolvers } from "../../types";
-import * as bcrypt from "bcrypt";
+import { Resolvers } from '../../types';
+import * as bcrypt from 'bcrypt';
 
 const resolvers: Resolvers = {
 	Mutation: {
@@ -17,7 +17,7 @@ const resolvers: Resolvers = {
 				if (existingUser) {
 					return {
 						ok: false,
-						error: "User is existing",
+						error: 'User is Already Existing',
 					};
 				}
 				const hashedPassword = await bcrypt.hash(password, 10);
