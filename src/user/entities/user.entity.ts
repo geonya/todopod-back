@@ -1,4 +1,5 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
+import { IsEmail, IsString, Length } from 'class-validator';
 import {
   Column,
   CreateDateColumn,
@@ -6,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+@InputType('UserInput', { isAbstract: true })
 @ObjectType()
 @Entity()
 export class User {
@@ -23,15 +25,20 @@ export class User {
 
   @Column()
   @Field((type) => String)
+  @IsString()
+  @Length(2, 10)
   name: string;
 
   @Column()
   @Field((type) => String)
-  email: string;
-
-  @Column()
-  @Field((type) => String)
+  @IsString()
+  @Length(4)
   password: string;
+
+  @Column({ default: 'geony@geony.com' })
+  @Field((type) => String)
+  @IsEmail()
+  email: string;
 
   @Column({ nullable: true })
   @Field((type) => String, { nullable: true })
