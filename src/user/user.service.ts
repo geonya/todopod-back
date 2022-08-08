@@ -22,12 +22,12 @@ export class UserService {
     createAccountInput: CreateAccountInput,
   ): Promise<CreateAccountOutput> {
     try {
-      const exsitingUser = await this.user.findOne({
+      const existingUser = await this.user.findOne({
         where: {
           email: createAccountInput.email,
         },
       });
-      if (exsitingUser) {
+      if (existingUser) {
         return {
           ok: false,
           error: 'User Already Exists!',
@@ -47,9 +47,7 @@ export class UserService {
   async login(loginInput: LoginInput): Promise<LoginOutput> {
     try {
       const user = await this.user.findOne({
-        where: {
-          email: loginInput.email,
-        },
+        where: { email: loginInput.email },
       });
       if (!user) {
         return {
@@ -116,7 +114,7 @@ export class UserService {
 
   async editAccount(
     id: number,
-    editAccountInput: EditAccountInput,
+    { name, email, password, address, company, avatar, role }: EditAccountInput,
   ): Promise<EditAccountOutput> {
     try {
       const { user, error } = await this.findUserById(id);
@@ -126,6 +124,38 @@ export class UserService {
           error,
         };
       }
+      if (name) {
+        user.name = name;
+      }
+      if (email) {
+        const emailUser = await this.user.findOne({ where: { email } });
+        if (emailUser) {
+          return {
+            ok: false,
+            error: 'Email is Already exists',
+          };
+        }
+        user.email = email;
+      }
+      if (password) {
+        user.password = password;
+      }
+      if (address) {
+        user.address = address;
+      }
+      if (company) {
+        user.company = company;
+      }
+      if (avatar) {
+        user.avatar = avatar;
+      }
+      if (role) {
+        user.role = role;
+      }
+      await this.user.save(user);
+      return {
+        ok: true,
+      };
     } catch (error) {
       console.error(error);
       return {

@@ -58,7 +58,7 @@ describe('UserService', () => {
   describe('createAccount', () => {
     it('should fail if user exists', async () => {
       userRepository.findOne.mockResolvedValue({
-        email: 'test@test.com',
+        ...mockUser,
       });
       const result = await userService.createAccount(mockUser);
       expect(result).toEqual({
@@ -86,7 +86,7 @@ describe('UserService', () => {
       expect(result).toEqual({ ok: true });
     });
     it('should fail on exception', async () => {
-      userRepository.findOne.mockRejectedValue(new Error());
+      userRepository.save.mockRejectedValue(new Error());
       const result = await userService.createAccount(mockUser);
       expect(result).toEqual({
         ok: false,
@@ -199,7 +199,7 @@ describe('UserService', () => {
   describe('editAccount', () => {
     const editAccountArgs = {
       name: 'test',
-      email: 'test@test.com',
+      email: 'test2@test.com',
       password: 'test',
       address: 'test',
       company: 'test',
@@ -215,6 +215,53 @@ describe('UserService', () => {
       expect(result).toEqual({
         ok: false,
         error: 'Not found user',
+      });
+    });
+    it('should fail if email exsits', async () => {
+      userRepository.findOne.mockResolvedValue({ ...mockUser });
+      const result = await userService.editAccount(
+        mockUser.id,
+        editAccountArgs,
+      );
+      expect(userRepository.findOne).toBeCalledWith({
+        where: {
+          email: editAccountArgs.email,
+        },
+      });
+      expect(result).toEqual({
+        ok: false,
+        error: 'Email is Already exists',
+      });
+    });
+    it('should success edit account', async () => {
+      userRepository.findOne.mockResolvedValueOnce({
+        ...mockUser,
+      });
+      userRepository.save.mockResolvedValue(editAccountArgs);
+      const result = await userService.editAccount(
+        mockUser.id,
+        editAccountArgs,
+      );
+      expect(userRepository.save).toHaveBeenCalledTimes(1);
+      expect(userRepository.save).toHaveBeenCalledWith({
+        id: mockUser.id,
+        ...editAccountArgs,
+      });
+      expect(result).toEqual({
+        ok: true,
+      });
+    });
+    it('should fail on exception', async () => {
+      userRepository.findOne.mockResolvedValueOnce({ ...mockUser });
+      userRepository.findOne.mockResolvedValueOnce(null);
+      userRepository.save.mockRejectedValue(new Error());
+      const result = await userService.editAccount(
+        mockUser.id,
+        editAccountArgs,
+      );
+      expect(result).toEqual({
+        ok: false,
+        error: 'Edit Account Internal Error',
       });
     });
   });
