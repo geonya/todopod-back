@@ -11,6 +11,7 @@ import { LoginInput, LoginOutput } from './dtos/login.dto';
 import { User } from './entities/user.entity';
 import * as jwt from 'jsonwebtoken';
 import { JwtService } from '../jwt/jwt.service';
+import { GqlContextType } from '@nestjs/graphql';
 
 @Injectable()
 export class UserService {
@@ -100,6 +101,28 @@ export class UserService {
       return {
         ok: false,
         error: 'FindUserById Internal Error',
+      };
+    }
+  }
+
+  async myProfile(context: GqlContextType) {
+    try {
+      const me = context['user'];
+      if (!me) {
+        return {
+          ok: false,
+          error: 'Not Athorized',
+        };
+      }
+      return {
+        ok: true,
+        user: me,
+      };
+    } catch (error) {
+      console.error(error);
+      return {
+        ok: false,
+        error: 'myProfile Internal Error',
       };
     }
   }

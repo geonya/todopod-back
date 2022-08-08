@@ -1,4 +1,11 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Context,
+  GqlContextType,
+  Mutation,
+  Query,
+  Resolver,
+} from '@nestjs/graphql';
 import {
   CreateAccountInput,
   CreateAccountOutput,
@@ -8,6 +15,7 @@ import {
   FindUserByIdOutput,
 } from './dtos/find-user-by-id.dto';
 import { LoginInput, LoginOutput } from './dtos/login.dto';
+import { MyProfileOutput } from './dtos/myProfile.dto';
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
 
@@ -34,6 +42,8 @@ export class UserResolver {
     return this.userService.findUserById(id);
   }
 
-  // @Query((returns) => User)
-  // me() {}
+  @Query((returns) => MyProfileOutput)
+  myProfile(@Context() context: GqlContextType): Promise<MyProfileOutput> {
+    return this.userService.myProfile(context);
+  }
 }
