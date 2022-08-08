@@ -47,7 +47,7 @@ export class UserResolver {
 
   @Query((returns) => MyProfileOutput)
   @UseGuards(AuthGuard)
-  myProfile(@AuthUser() user: User): Promise<MyProfileOutput> {
-    return this.userService.myProfile(user);
+  getMyProfile(@AuthUser() authUser: User): Promise<MyProfileOutput> {
+    return this.userService.getMyProfile(authUser);
   }
 }

@@ -105,7 +105,7 @@ export class UserService {
     }
   }
 
-  async myProfile(user: User) {
+  async getMyProfile(user: User) {
     try {
       if (!user) {
         return {
