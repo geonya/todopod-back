@@ -13,6 +13,7 @@ import {
   CreateAccountInput,
   CreateAccountOutput,
 } from './dtos/create-account-dto';
+import { EditAccountInput, EditAccountOutput } from './dtos/edit-account.dto';
 import {
   FindUserByIdInput,
   FindUserByIdOutput,
@@ -26,6 +27,21 @@ import { UserService } from './user.service';
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
+  // Queries
+  @Query((returns) => FindUserByIdOutput)
+  findUserById(
+    @Args('input') { id }: FindUserByIdInput,
+  ): Promise<FindUserByIdOutput> {
+    return this.userService.findUserById(id);
+  }
+
+  @Query((returns) => MyProfileOutput)
+  @UseGuards(AuthGuard)
+  getMyProfile(@AuthUser() authUser: User): Promise<MyProfileOutput> {
+    return this.userService.getMyProfile(authUser);
+  }
+
+  // Mutations
   @Mutation((returns) => CreateAccountOutput)
   createAccount(
     @Args('input') createAccountInput: CreateAccountInput,
@@ -38,16 +54,12 @@ export class UserResolver {
     return this.userService.login(loginInput);
   }
 
-  @Query((returns) => FindUserByIdOutput)
-  findUserById(
-    @Args('input') { id }: FindUserByIdInput,
-  ): Promise<FindUserByIdOutput> {
-    return this.userService.findUserById(id);
-  }
-
-  @Query((returns) => MyProfileOutput)
+  @Mutation((returns) => EditAccountOutput)
   @UseGuards(AuthGuard)
-  getMyProfile(@AuthUser() authUser: User): Promise<MyProfileOutput> {
-    return this.userService.getMyProfile(authUser);
+  editAccount(
+    @AuthUser() { id }: User,
+    @Args('input') editAccountInput: EditAccountInput,
+  ): Promise<EditAccountOutput> {
+    return this.userService.editAccount(id, editAccountInput);
   }
 }

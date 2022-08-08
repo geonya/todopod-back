@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import {
@@ -9,16 +8,13 @@ import {
 import { FindUserByIdOutput } from './dtos/find-user-by-id.dto';
 import { LoginInput, LoginOutput } from './dtos/login.dto';
 import { User } from './entities/user.entity';
-import * as jwt from 'jsonwebtoken';
 import { JwtService } from '../jwt/jwt.service';
-import { GqlContextType } from '@nestjs/graphql';
+import { EditAccountInput, EditAccountOutput } from './dtos/edit-account.dto';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User)
-    private readonly user: Repository<User>,
-    private readonly config: ConfigService,
+    @InjectRepository(User) private readonly user: Repository<User>,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -43,7 +39,7 @@ export class UserService {
       console.error(error);
       return {
         ok: false,
-        error,
+        error: 'Create Account Internal Error',
       };
     }
   }
@@ -106,22 +102,35 @@ export class UserService {
   }
 
   async getMyProfile(user: User) {
+    if (!user) {
+      return {
+        ok: false,
+        error: 'Not Athorized',
+      };
+    }
+    return {
+      ok: true,
+      user,
+    };
+  }
+
+  async editAccount(
+    id: number,
+    editAccountInput: EditAccountInput,
+  ): Promise<EditAccountOutput> {
     try {
+      const { user, error } = await this.findUserById(id);
       if (!user) {
         return {
           ok: false,
-          error: 'Not Athorized',
+          error,
         };
       }
-      return {
-        ok: true,
-        user,
-      };
     } catch (error) {
       console.error(error);
       return {
         ok: false,
-        error: 'myProfile Internal Error',
+        error: 'Edit Account Internal Error',
       };
     }
   }

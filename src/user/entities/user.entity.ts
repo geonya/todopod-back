@@ -10,14 +10,14 @@ import { BeforeInsert, Column, Entity } from 'typeorm';
 import { CoreEntity } from '../../common/entities/core.entity';
 import * as bcrypt from 'bcrypt';
 
-enum UserRole {
+export enum UserRole {
   Client,
   Producer,
   Admin,
 }
 registerEnumType(UserRole, { name: 'UserRole' });
 
-@InputType('UserInput', { isAbstract: true })
+@InputType('UserInputType', { isAbstract: true })
 @ObjectType()
 @Entity()
 export class User extends CoreEntity {
@@ -47,6 +47,11 @@ export class User extends CoreEntity {
   @Field((type) => String, { nullable: true })
   @IsString()
   address?: string;
+
+  @Column({ nullable: true })
+  @Field((type) => String, { nullable: true })
+  @IsString()
+  avatar?: string;
 
   @Column({
     type: 'enum',

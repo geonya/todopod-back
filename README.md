@@ -23,9 +23,10 @@ _220805_ ~ _220830_
     - [x] User Role
   - [x] Init User Service / Resolver
   - [x] Create Account Mutation
-  - [ ] Login Mutation
+  - [x] Login Mutation
   - [ ] Edit Account Mutation
   - [ ] Delete Account Mutation
+  - [ ] User Service Unit Testing
 - [ ] Project Model
 - [ ] Task Model
 - [ ] Todo Model
