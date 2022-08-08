@@ -105,10 +105,9 @@ export class UserService {
     }
   }
 
-  async myProfile(context: GqlContextType) {
+  async myProfile(user: User) {
     try {
-      const me = context['user'];
-      if (!me) {
+      if (!user) {
         return {
           ok: false,
           error: 'Not Athorized',
@@ -116,7 +115,7 @@ export class UserService {
       }
       return {
         ok: true,
-        user: me,
+        user,
       };
     } catch (error) {
       console.error(error);

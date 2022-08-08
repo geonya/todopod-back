@@ -1,3 +1,4 @@
+import { UseGuards } from '@nestjs/common';
 import {
   Args,
   Context,
@@ -6,6 +7,8 @@ import {
   Query,
   Resolver,
 } from '@nestjs/graphql';
+import { AuthUser } from '../auth/auth-user.decorator';
+import { AuthGuard } from '../auth/auth.guard';
 import {
   CreateAccountInput,
   CreateAccountOutput,
@@ -43,7 +46,8 @@ export class UserResolver {
   }
 
   @Query((returns) => MyProfileOutput)
-  myProfile(@Context() context: GqlContextType): Promise<MyProfileOutput> {
-    return this.userService.myProfile(context);
+  @UseGuards(AuthGuard)
+  myProfile(@AuthUser() user: User): Promise<MyProfileOutput> {
+    return this.userService.myProfile(user);
   }
 }
