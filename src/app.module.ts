@@ -8,6 +8,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { User } from './user/entities/user.entity';
 import { UserModule } from './user/user.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { UserModule } from './user/user.module';
       autoSchemaFile: true,
     }),
     UserModule,
+    CommonModule,
   ],
   controllers: [AppController],
   providers: [AppService],

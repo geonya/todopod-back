@@ -1,28 +1,24 @@
-import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
-import { IsEmail, IsString, Length } from 'class-validator';
 import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+  Field,
+  InputType,
+  ObjectType,
+  registerEnumType,
+} from '@nestjs/graphql';
+import { IsEmail, IsString, Length } from 'class-validator';
+import { Column, Entity } from 'typeorm';
+import { CoreEntity } from '../../common/entities/core.entity';
+
+enum UserRole {
+  Client,
+  Producer,
+  Admin,
+}
+registerEnumType(UserRole, { name: 'UserRole' });
 
 @InputType('UserInput', { isAbstract: true })
 @ObjectType()
 @Entity()
-export class User {
-  @PrimaryGeneratedColumn()
-  @Field((type) => Int)
-  id: number;
-
-  @CreateDateColumn()
-  @Field((type) => Date)
-  createdAt: Date;
-
-  @CreateDateColumn()
-  @Field((type) => Date)
-  updatedAt: Date;
-
+export class User extends CoreEntity {
   @Column()
   @Field((type) => String)
   @IsString()
@@ -43,4 +39,16 @@ export class User {
   @Column({ nullable: true })
   @Field((type) => String, { nullable: true })
   company?: string;
+
+  @Column({ nullable: true })
+  @Field((type) => String, { nullable: true })
+  address?: string;
+
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.Client,
+  })
+  @Field((type) => UserRole)
+  role: UserRole;
 }

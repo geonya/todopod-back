@@ -18,7 +18,6 @@ export class UserResolver {
   createAccount(
     @Args('input') createAccountInput: CreateAccountInput,
   ): Promise<CreateAccountOutput> {
-    console.log(createAccountInput);
     return this.userService.createAccount(createAccountInput);
   }
 }
