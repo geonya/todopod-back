@@ -1,3 +1,4 @@
+import { InternalServerErrorException } from '@nestjs/common';
 import {
   Field,
   InputType,
@@ -5,8 +6,9 @@ import {
   registerEnumType,
 } from '@nestjs/graphql';
 import { IsEmail, IsString, Length } from 'class-validator';
-import { Column, Entity } from 'typeorm';
+import { BeforeInsert, Column, Entity } from 'typeorm';
 import { CoreEntity } from '../../common/entities/core.entity';
+import * as bcrypt from 'bcrypt';
 
 enum UserRole {
   Client,
@@ -51,4 +53,14 @@ export class User extends CoreEntity {
   })
   @Field((type) => UserRole)
   role: UserRole;
+
+  @BeforeInsert()
+  async hashPassword(): Promise<void> {
+    try {
+      this.password = await bcrypt.hash(this.password, 10);
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException('password hashing error');
+    }
+  }
 }
