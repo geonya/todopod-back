@@ -18,7 +18,18 @@ export class UserService {
     createAccountInput: CreateAccountInput,
   ): Promise<CreateAccountOutput> {
     try {
-      await this.user.save(this.user.create(createAccountInput));
+      const exsitingUser = await this.user.findOne({
+        where: {
+          name: createAccountInput.name,
+        },
+      });
+      if (exsitingUser) {
+        return {
+          ok: false,
+          error: 'User Already Exists!',
+        };
+      }
+      await this.user.save(this.user.create({ ...createAccountInput }));
       return { ok: true };
     } catch (error) {
       console.error(error);
