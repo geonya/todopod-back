@@ -70,13 +70,7 @@ export class UserService {
           error: 'Wrong Password',
         };
       }
-      const token = jwt.sign(
-        {
-          id: user.id,
-          password: '1234',
-        },
-        this.config.get('PRIVATE_KEY'),
-      );
+      const token = this.jwtService.sign(user.id);
       return {
         ok: true,
         token,

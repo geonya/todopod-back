@@ -43,7 +43,9 @@ import { JwtModule } from './jwt/jwt.module';
       driver: ApolloDriver,
       autoSchemaFile: true,
     }),
-    JwtModule.forRoot(),
+    JwtModule.forRoot({
+      privateKey: process.env.PRIVATE_KEY,
+    }),
     UserModule,
     CommonModule,
   ],

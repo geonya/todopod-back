@@ -11,10 +11,12 @@ import { UserService } from './user.service';
 @Resolver((of) => User)
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
+
   @Query((returns) => GetUsersOutput)
   users(@Args('input') getUsersInput: GetUsersInput): Promise<GetUsersOutput> {
     return this.userService.getUser(getUsersInput);
   }
+
   @Mutation((returns) => CreateAccountOutput)
   createAccount(
     @Args('input') createAccountInput: CreateAccountInput,
@@ -26,4 +28,7 @@ export class UserResolver {
   login(@Args('input') loginInput: LoginInput): Promise<LoginOutput> {
     return this.userService.login(loginInput);
   }
+
+  @Query((returns) => User)
+  me() {}
 }
