@@ -3,7 +3,10 @@ import {
   CreateAccountInput,
   CreateAccountOutput,
 } from './dtos/create-account-dto';
-import { GetUsersInput, GetUsersOutput } from './dtos/get-users.dto';
+import {
+  FindUserByIdInput,
+  FindUserByIdOutput,
+} from './dtos/find-user-by-id.dto';
 import { LoginInput, LoginOutput } from './dtos/login.dto';
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
@@ -11,11 +14,6 @@ import { UserService } from './user.service';
 @Resolver((of) => User)
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
-
-  @Query((returns) => GetUsersOutput)
-  users(@Args('input') getUsersInput: GetUsersInput): Promise<GetUsersOutput> {
-    return this.userService.getUser(getUsersInput);
-  }
 
   @Mutation((returns) => CreateAccountOutput)
   createAccount(
@@ -29,6 +27,13 @@ export class UserResolver {
     return this.userService.login(loginInput);
   }
 
-  @Query((returns) => User)
-  me() {}
+  @Query((returns) => FindUserByIdOutput)
+  findUserById(
+    @Args('input') { id }: FindUserByIdInput,
+  ): Promise<FindUserByIdOutput> {
+    return this.userService.findUserById(id);
+  }
+
+  // @Query((returns) => User)
+  // me() {}
 }

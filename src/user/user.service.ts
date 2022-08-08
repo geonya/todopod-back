@@ -6,7 +6,7 @@ import {
   CreateAccountInput,
   CreateAccountOutput,
 } from './dtos/create-account-dto';
-import { GetUsersInput, GetUsersOutput } from './dtos/get-users.dto';
+import { FindUserByIdOutput } from './dtos/find-user-by-id.dto';
 import { LoginInput, LoginOutput } from './dtos/login.dto';
 import { User } from './entities/user.entity';
 import * as jwt from 'jsonwebtoken';
@@ -21,7 +21,6 @@ export class UserService {
     private readonly jwtService: JwtService,
   ) {}
 
-  // create account
   async createAccount(
     createAccountInput: CreateAccountInput,
   ): Promise<CreateAccountOutput> {
@@ -47,9 +46,7 @@ export class UserService {
       };
     }
   }
-  // create account
 
-  // login
   async login(loginInput: LoginInput): Promise<LoginOutput> {
     try {
       const user = await this.user.findOne({
@@ -83,23 +80,27 @@ export class UserService {
       };
     }
   }
-  // login
 
-  // get user
-  async getUser(getUsersInput: GetUsersInput): Promise<GetUsersOutput> {
+  async findUserById(id: number): Promise<FindUserByIdOutput> {
     try {
-      const users = await this.user.find({});
+      const user = await this.user.findOne({
+        where: { id },
+      });
+      if (!user) {
+        return {
+          ok: false,
+          error: 'Not found user',
+        };
+      }
       return {
         ok: true,
-        users,
+        user,
       };
     } catch (error) {
-      console.error(error);
       return {
         ok: false,
-        error,
+        error: 'FindUserById Internal Error',
       };
     }
   }
-  // get user
 }
