@@ -7,7 +7,7 @@ import {
 } from './dtos/create-account-dto';
 import { FindUserByIdOutput } from './dtos/find-user-by-id.dto';
 import { LoginInput, LoginOutput } from './dtos/login.dto';
-import { User } from './entities/user.entity';
+import { User, UserRole } from './entities/user.entity';
 import { JwtService } from '../jwt/jwt.service';
 import { EditAccountInput, EditAccountOutput } from './dtos/edit-account.dto';
 
