@@ -5,7 +5,7 @@ import {
   ObjectType,
   registerEnumType,
 } from '@nestjs/graphql';
-import { IsEmail, IsString, Length } from 'class-validator';
+import { IsEmail, IsEnum, IsString, Length } from 'class-validator';
 import { BeforeInsert, Column, Entity } from 'typeorm';
 import { CoreEntity } from '../../common/entities/core.entity';
 import * as bcrypt from 'bcrypt';
@@ -40,10 +40,12 @@ export class User extends CoreEntity {
 
   @Column({ nullable: true })
   @Field((type) => String, { nullable: true })
+  @IsString()
   company?: string;
 
   @Column({ nullable: true })
   @Field((type) => String, { nullable: true })
+  @IsString()
   address?: string;
 
   @Column({
@@ -52,6 +54,7 @@ export class User extends CoreEntity {
     default: UserRole.Client,
   })
   @Field((type) => UserRole)
+  @IsEnum(UserRole)
   role: UserRole;
 
   @BeforeInsert()
@@ -60,7 +63,15 @@ export class User extends CoreEntity {
       this.password = await bcrypt.hash(this.password, 10);
     } catch (error) {
       console.error(error);
-      throw new InternalServerErrorException('password hashing error');
+      throw new InternalServerErrorException('hashPassword error');
+    }
+  }
+  async checkPassword(aPassword: string): Promise<boolean> {
+    try {
+      return bcrypt.compare(aPassword, this.password);
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException('checkPassowrd error');
     }
   }
 }

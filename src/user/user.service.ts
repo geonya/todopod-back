@@ -6,6 +6,7 @@ import {
   CreateAccountOutput,
 } from './dtos/create-account-dto';
 import { GetUsersInput, GetUsersOutput } from './dtos/get-users.dto';
+import { LoginInput, LoginOutput } from './dtos/login.dto';
 import { User } from './entities/user.entity';
 
 @Injectable()
@@ -14,13 +15,15 @@ export class UserService {
     @InjectRepository(User)
     private readonly user: Repository<User>,
   ) {}
+
+  // create account
   async createAccount(
     createAccountInput: CreateAccountInput,
   ): Promise<CreateAccountOutput> {
     try {
       const exsitingUser = await this.user.findOne({
         where: {
-          name: createAccountInput.name,
+          email: createAccountInput.email,
         },
       });
       if (exsitingUser) {
@@ -39,6 +42,44 @@ export class UserService {
       };
     }
   }
+  // create account
+
+  // login
+  async login(loginInput: LoginInput): Promise<LoginOutput> {
+    try {
+      const user = await this.user.findOne({
+        where: {
+          email: loginInput.email,
+        },
+      });
+      if (!user) {
+        return {
+          ok: false,
+          error: 'User Not Found',
+        };
+      }
+      const passwordCorrect = await user.checkPassword(loginInput.password);
+      if (!passwordCorrect) {
+        return {
+          ok: false,
+          error: 'Wrong Password',
+        };
+      }
+      return {
+        ok: true,
+        token: 'fake token',
+      };
+    } catch (error) {
+      console.error(error);
+      return {
+        ok: false,
+        error: 'Login Error',
+      };
+    }
+  }
+  // login
+
+  // get user
   async getUser(getUsersInput: GetUsersInput): Promise<GetUsersOutput> {
     try {
       const users = await this.user.find({});
@@ -54,4 +95,5 @@ export class UserService {
       };
     }
   }
+  // get user
 }

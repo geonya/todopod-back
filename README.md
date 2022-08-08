@@ -22,7 +22,8 @@ _220805_ ~ _220830_
   - [x] User Entity
     - [x] User Role
   - [x] Init User Service / Resolver
-  - [ ] Create Account Mutation
+  - [x] Create Account Mutation
+  - [ ] Login Mutation
   - [ ] Edit Account Mutation
   - [ ] Delete Account Mutation
 - [ ] Project Model

@@ -5,6 +5,7 @@ import { User } from '../entities/user.entity';
 @InputType()
 export class CreateAccountInput extends PickType(User, [
   'name',
+  'email',
   'password',
   'role',
 ]) {}
