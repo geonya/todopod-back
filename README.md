@@ -31,13 +31,13 @@ _220805_ ~ _220830_
   - [x] Project Entity
   - [x] User Relation
   - [x] Create Project
-  - [ ] Get Project
-  - [ ] Get Projects
-    - [ ] Pagination
-  - [ ] Edit Project
-  - [ ] Delete Project
-- [ ] Category Model
-  - [ ] Create Category
+  - [x] Get Project
+  - [x] Get Projects
+    - [x] Pagination
+  - [x] Edit Project
+  - [x] Delete Project
+- [x] Tag Model
+  - [x] Create Tag
 - [ ] Task Model
 - [ ] Todo Model
 - [ ] Product Model

@@ -3,9 +3,9 @@ import { IsInt } from 'class-validator'
 import { CoreOutput } from '../../common/dtos/output.dto'
 import { Project } from '../entities/project.entity'
 
-@InputType('GetProjectInputType')
+@InputType('GetProjectsInputType')
 export class GetProjectsInput {
-  @Field((type) => Int, { nullable: true })
+  @Field((type) => Int, { defaultValue: 1 })
   @IsInt()
   page?: number
 }
@@ -14,4 +14,10 @@ export class GetProjectsInput {
 export class GetProjectsOutput extends CoreOutput {
   @Field((type) => [Project], { nullable: true })
   projects?: Project[]
+
+  @Field((type) => Int, { nullable: true })
+  totalProjectsCount?: number
+
+  @Field((type) => Int, { nullable: true })
+  totalPages?: number
 }
