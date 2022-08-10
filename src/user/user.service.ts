@@ -14,12 +14,12 @@ import {
   DeleteAccountInput,
   DeleteAccountOutput,
 } from './dtos/delete-account.dto'
-import errorMessage from '../common/constants/errorMessage.constants'
+import errorMessage from '../common/constants/error-messages.constants'
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private readonly user: Repository<User>,
+    @InjectRepository(User) private readonly users: Repository<User>,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -27,7 +27,7 @@ export class UserService {
     createAccountInput: CreateAccountInput,
   ): Promise<CreateAccountOutput> {
     try {
-      const existingUser = await this.user.findOne({
+      const existingUser = await this.users.findOne({
         where: {
           email: createAccountInput.email,
         },
@@ -38,7 +38,7 @@ export class UserService {
           error: errorMessage.ko.user.emailExisting,
         }
       }
-      await this.user.save(this.user.create({ ...createAccountInput }))
+      await this.users.save(this.users.create({ ...createAccountInput }))
       return { ok: true }
     } catch (error) {
       console.error(error)
@@ -51,7 +51,7 @@ export class UserService {
 
   async login(loginInput: LoginInput): Promise<LoginOutput> {
     try {
-      const user = await this.user.findOne({
+      const user = await this.users.findOne({
         where: { email: loginInput.email },
       })
       if (!user) {
@@ -83,7 +83,7 @@ export class UserService {
 
   async findUserById(id: number): Promise<FindUserByIdOutput> {
     try {
-      const user = await this.user.findOne({
+      const user = await this.users.findOne({
         where: { id },
       })
       if (!user) {
@@ -133,7 +133,7 @@ export class UserService {
         user.name = name
       }
       if (email) {
-        const emailUser = await this.user.findOne({ where: { email } })
+        const emailUser = await this.users.findOne({ where: { email } })
         if (emailUser) {
           return {
             ok: false,
@@ -157,7 +157,7 @@ export class UserService {
       if (role) {
         user.role = role
       }
-      await this.user.save(user)
+      await this.users.save(user)
       return {
         ok: true,
       }
@@ -181,7 +181,7 @@ export class UserService {
           error: errorMessage.ko.user.notAuthorized,
         }
       }
-      const targetUser = await this.user.findOne({
+      const targetUser = await this.users.findOne({
         where: { id: deleteAccountInput.id },
       })
       if (!targetUser) {
@@ -190,7 +190,7 @@ export class UserService {
           error: errorMessage.ko.user.userNotFound,
         }
       }
-      await this.user.delete(deleteAccountInput.id)
+      await this.users.delete(deleteAccountInput.id)
       return {
         ok: true,
       }

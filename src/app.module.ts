@@ -1,20 +1,20 @@
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import {
   MiddlewareConsumer,
   Module,
   NestModule,
   RequestMethod,
-} from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { GraphQLModule } from '@nestjs/graphql';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import * as Joi from 'joi';
-import { User } from './user/entities/user.entity';
-import { UserModule } from './user/user.module';
-import { JwtModule } from './jwt/jwt.module';
-import { JwtMiddleware } from './jwt/jwt.middleware';
-import { AuthModule } from './auth/auth.module';
-import { ProjectModule } from './project/project.module';
+} from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
+import { GraphQLModule } from '@nestjs/graphql'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import * as Joi from 'joi'
+import { UserModule } from './user/user.module'
+import { JwtModule } from './jwt/jwt.module'
+import { JwtMiddleware } from './jwt/jwt.middleware'
+import { AuthModule } from './auth/auth.module'
+import { ProjectModule } from './project/project.module'
+import { TagModule } from './tag/tag.module'
 
 @Module({
   imports: [
@@ -62,6 +62,6 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(JwtMiddleware)
-      .forRoutes({ path: '/graphql', method: RequestMethod.POST });
+      .forRoutes({ path: '/graphql', method: RequestMethod.POST })
   }
 }

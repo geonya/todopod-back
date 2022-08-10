@@ -28,9 +28,16 @@ _220805_ ~ _220830_
   - [x] Delete Account Mutation
   - [x] User Service Unit Testing
 - [ ] Project Model
-  - [ ] Project Entity
-  - [ ] User Relation
-  - [ ]
+  - [x] Project Entity
+  - [x] User Relation
+  - [x] Create Project
+  - [ ] Get Project
+  - [ ] Get Projects
+    - [ ] Pagination
+  - [ ] Edit Project
+  - [ ] Delete Project
+- [ ] Category Model
+  - [ ] Create Category
 - [ ] Task Model
 - [ ] Todo Model
 - [ ] Product Model
