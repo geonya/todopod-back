@@ -1,7 +1,6 @@
-import { UseGuards } from '@nestjs/common'
 import { Args, Mutation, Resolver, Query } from '@nestjs/graphql'
 import { AuthUser } from '../auth/auth-user.decorator'
-import { AuthGuard } from '../auth/auth.guard'
+import { Role } from '../auth/role.decorator'
 import { User } from '../user/entities/user.entity'
 import {
   CreateProjectInput,
@@ -22,14 +21,16 @@ export class ProjectResolver {
   constructor(private readonly projectService: ProjectService) {}
 
   @Query((returns) => GetProjectsOutput)
+  @Role(['Any'])
   async getProjects(
-    @Args('input') getProjectsInput: GetProjectsInput,
+    @Args('input')
+    getProjectsInput: GetProjectsInput,
   ): Promise<GetProjectsOutput> {
     return this.projectService.getProjects(getProjectsInput)
   }
 
   @Query((returns) => GetProjectOutput)
-  @UseGuards(AuthGuard)
+  @Role(['Any'])
   async getProject(
     @AuthUser() user: User,
     @Args('input') getProjectInput: GetProjectInput,
@@ -38,7 +39,7 @@ export class ProjectResolver {
   }
 
   @Mutation((returns) => CreateProjectOutput)
-  @UseGuards(AuthGuard)
+  @Role(['Producer'])
   async createProject(
     @AuthUser() creator: User,
     @Args('input') createProjectInput: CreateProjectInput,
@@ -47,7 +48,7 @@ export class ProjectResolver {
   }
 
   @Mutation((returns) => EditProjectOutput)
-  @UseGuards(AuthGuard)
+  @Role(['Producer'])
   async editProject(
     @AuthUser() creator: User,
     @Args('input') editProjectInput: EditProjectInput,
@@ -56,7 +57,7 @@ export class ProjectResolver {
   }
 
   @Mutation((returns) => DeleteProjectOutput)
-  @UseGuards(AuthGuard)
+  @Role(['Producer'])
   async deleteProject(
     @AuthUser() creator: User,
     @Args('input') deleteProjectInput: DeleteProjectInput,

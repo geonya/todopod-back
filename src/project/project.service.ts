@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import errorMessage from '../common/constants/error-messages.constants'
 import { TagRepository } from '../tag/repositories/tag.repository'
-import { EditAccountInput } from '../user/dtos/edit-account.dto'
 import { User } from '../user/entities/user.entity'
 import {
   CreateProjectInput,

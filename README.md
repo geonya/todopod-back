@@ -27,6 +27,7 @@ _220805_ ~ _220830_
   - [x] Edit Account Mutation
   - [x] Delete Account Mutation
   - [x] User Service Unit Testing
+  - [ ] Email Validation
 - [ ] Project Model
   - [x] Project Entity
   - [x] User Relation
@@ -42,3 +43,4 @@ _220805_ ~ _220830_
 - [ ] Todo Model
 - [ ] Product Model
 - [ ] Photo Model
+- [ ] Chat with Client
