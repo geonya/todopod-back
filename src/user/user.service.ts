@@ -1,15 +1,20 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Repository } from 'typeorm'
 import {
   CreateAccountInput,
   CreateAccountOutput,
-} from './dtos/create-account-dto';
-import { FindUserByIdOutput } from './dtos/find-user-by-id.dto';
-import { LoginInput, LoginOutput } from './dtos/login.dto';
-import { User, UserRole } from './entities/user.entity';
-import { JwtService } from '../jwt/jwt.service';
-import { EditAccountInput, EditAccountOutput } from './dtos/edit-account.dto';
+} from './dtos/create-account-dto'
+import { FindUserByIdOutput } from './dtos/find-user-by-id.dto'
+import { LoginInput, LoginOutput } from './dtos/login.dto'
+import { User, UserRole } from './entities/user.entity'
+import { JwtService } from '../jwt/jwt.service'
+import { EditAccountInput, EditAccountOutput } from './dtos/edit-account.dto'
+import {
+  DeleteAccountInput,
+  DeleteAccountOutput,
+} from './dtos/delete-account.dto'
+import errorMessage from '../common/constants/errorMessage.constants'
 
 @Injectable()
 export class UserService {
@@ -26,21 +31,21 @@ export class UserService {
         where: {
           email: createAccountInput.email,
         },
-      });
+      })
       if (existingUser) {
         return {
           ok: false,
-          error: 'User Already Exists!',
-        };
+          error: errorMessage.ko.user.emailExisting,
+        }
       }
-      await this.user.save(this.user.create({ ...createAccountInput }));
-      return { ok: true };
+      await this.user.save(this.user.create({ ...createAccountInput }))
+      return { ok: true }
     } catch (error) {
-      console.error(error);
+      console.error(error)
       return {
         ok: false,
-        error: 'Create Account Internal Error',
-      };
+        error: errorMessage.ko.common.internalError + 'createAccount',
+      }
     }
   }
 
@@ -48,31 +53,31 @@ export class UserService {
     try {
       const user = await this.user.findOne({
         where: { email: loginInput.email },
-      });
+      })
       if (!user) {
         return {
           ok: false,
-          error: 'User Not Found',
-        };
+          error: errorMessage.ko.user.userNotFound,
+        }
       }
-      const passwordCorrect = await user.checkPassword(loginInput.password);
+      const passwordCorrect = await user.checkPassword(loginInput.password)
       if (!passwordCorrect) {
         return {
           ok: false,
-          error: 'Wrong Password',
-        };
+          error: errorMessage.ko.user.passwordWrong,
+        }
       }
-      const token = this.jwtService.sign(user.id);
+      const token = this.jwtService.sign(user.id)
       return {
         ok: true,
         token,
-      };
+      }
     } catch (error) {
-      console.error(error);
+      console.error(error)
       return {
         ok: false,
-        error: 'Login Error',
-      };
+        error: errorMessage.ko.common.internalError + 'login',
+      }
     }
   }
 
@@ -80,22 +85,22 @@ export class UserService {
     try {
       const user = await this.user.findOne({
         where: { id },
-      });
+      })
       if (!user) {
         return {
           ok: false,
-          error: 'Not found user',
-        };
+          error: errorMessage.ko.user.userNotFound,
+        }
       }
       return {
         ok: true,
         user,
-      };
+      }
     } catch (error) {
       return {
         ok: false,
-        error: 'FindUserById Internal Error',
-      };
+        error: errorMessage.ko.common.internalError + 'findUserById',
+      }
     }
   }
 
@@ -103,13 +108,13 @@ export class UserService {
     if (!user) {
       return {
         ok: false,
-        error: 'Not Athorized',
-      };
+        error: errorMessage.ko.user.notAuthorized,
+      }
     }
     return {
       ok: true,
       user,
-    };
+    }
   }
 
   async editAccount(
@@ -117,51 +122,84 @@ export class UserService {
     { name, email, password, address, company, avatar, role }: EditAccountInput,
   ): Promise<EditAccountOutput> {
     try {
-      const { user, error } = await this.findUserById(id);
+      const { user, error } = await this.findUserById(id)
       if (!user) {
         return {
           ok: false,
           error,
-        };
+        }
       }
       if (name) {
-        user.name = name;
+        user.name = name
       }
       if (email) {
-        const emailUser = await this.user.findOne({ where: { email } });
+        const emailUser = await this.user.findOne({ where: { email } })
         if (emailUser) {
           return {
             ok: false,
-            error: 'Email is Already exists',
-          };
+            error: errorMessage.ko.user.emailExisting,
+          }
         }
-        user.email = email;
+        user.email = email
       }
       if (password) {
-        user.password = password;
+        user.password = password
       }
       if (address) {
-        user.address = address;
+        user.address = address
       }
       if (company) {
-        user.company = company;
+        user.company = company
       }
       if (avatar) {
-        user.avatar = avatar;
+        user.avatar = avatar
       }
       if (role) {
-        user.role = role;
+        user.role = role
       }
-      await this.user.save(user);
+      await this.user.save(user)
       return {
         ok: true,
-      };
+      }
     } catch (error) {
-      console.error(error);
+      console.error(error)
       return {
         ok: false,
-        error: 'Edit Account Internal Error',
-      };
+        error: errorMessage.ko.common.internalError + 'editAccount',
+      }
+    }
+  }
+
+  async deleteAccount(
+    user: User,
+    deleteAccountInput: DeleteAccountInput,
+  ): Promise<DeleteAccountOutput> {
+    try {
+      if (user.role !== UserRole.Admin && user.id !== deleteAccountInput.id) {
+        return {
+          ok: false,
+          error: errorMessage.ko.user.notAuthorized,
+        }
+      }
+      const targetUser = await this.user.findOne({
+        where: { id: deleteAccountInput.id },
+      })
+      if (!targetUser) {
+        return {
+          ok: false,
+          error: errorMessage.ko.user.userNotFound,
+        }
+      }
+      await this.user.delete(deleteAccountInput.id)
+      return {
+        ok: true,
+      }
+    } catch (error) {
+      console.error(error)
+      return {
+        ok: false,
+        error: errorMessage.ko.common + 'deleteAccount',
+      }
     }
   }
 }

@@ -25,7 +25,7 @@ _220805_ ~ _220830_
   - [x] Create Account Mutation
   - [x] Login Mutation
   - [x] Edit Account Mutation
-  - [ ] Delete Account Mutation
+  - [x] Delete Account Mutation
   - [x] User Service Unit Testing
 - [ ] Project Model
   - [ ] Project Entity
