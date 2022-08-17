@@ -22,6 +22,10 @@ const errorMessage = {
       notFound: '존재하지 않는 작업입니다.',
       notAuthorized: '해당 Task에 대한 권한이 없습니다.',
     },
+    todo: {
+      notFound: '존재하지 않는 Todo 입니다',
+      notAuthorized: '해당 Todo에 대한 권한이 없습니다.',
+    },
     product: {},
   },
 }

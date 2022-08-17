@@ -6,11 +6,13 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   RelationId,
 } from 'typeorm'
 import { CoreEntity } from '../../common/entities/core.entity'
 import { Project } from '../../project/entities/project.entity'
 import { Tag } from '../../tag/entities/tag.entity'
+import { Todo } from '../../todo/entities/todo.entity'
 import { User } from '../../user/entities/user.entity'
 
 @InputType('TaskInputType', { isAbstract: true })
@@ -42,6 +44,10 @@ export class Task extends CoreEntity {
   @RelationId((task: Task) => task.project)
   @Field((type) => Int)
   projectId: number
+
+  @Field((type) => [Todo], { nullable: true })
+  @OneToMany((type) => Todo, (todo) => todo.user, { nullable: true })
+  todos: Todo[]
 
   @Field((type) => [Tag], { nullable: true })
   @ManyToMany((type) => Tag, { eager: true, nullable: true })

@@ -26,7 +26,7 @@ import {
 import { LoginInput, LoginOutput } from './dtos/login.dto'
 import { MyProfileOutput } from './dtos/myProfile.dto'
 import { VerifyEmailInput, VerifyEmailOutput } from './dtos/verify-email.dto'
-import { User, UserRole } from './entities/user.entity'
+import { User } from './entities/user.entity'
 import { UserService } from './user.service'
 
 @Resolver((of) => User)

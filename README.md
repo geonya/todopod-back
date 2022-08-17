@@ -30,7 +30,7 @@ _220805_ ~ _220830_
   - [x] Email Validation (mailgun) 220817
   - [x] Relation with Projects
   - [x] Realation with Tasks
-  - [ ] Relation with Todos
+  - [x] Relation with Todos
   - [ ] Relation with Photos
   - [ ] Relation with Estimates
   - [ ] Unit Testing
@@ -62,5 +62,16 @@ _220805_ ~ _220830_
     - [x] Delete Task
   - [ ] Relation with Todo
 - [ ] Todo Model
+  - [x] Todo entity
+  - [x] Relation with User
+  - [x] Relation with Task
+  - [ ] Relation with Photo
+  - [x] CRUD Todo
+    - [x] Create
+    - [x] Get Todos in Task with Pagination
+    - [x] Get Todo
+    - [x] Edit Todo
+      - [x] Edit Progress (Pending, Doing, Done)
+    - [x] Delete Todo
 - [ ] Photo Model
 - [ ] Estimate Model

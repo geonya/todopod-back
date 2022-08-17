@@ -16,6 +16,7 @@ import { AuthModule } from './auth/auth.module'
 import { ProjectModule } from './project/project.module'
 import { EmailModule } from './email/email.module'
 import { TaskModule } from './task/task.module';
+import { TodoModule } from './todo/todo.module';
 
 @Module({
   imports: [
@@ -65,6 +66,7 @@ import { TaskModule } from './task/task.module';
       fromEmail: process.env.MAILGUN_FROM_EMAIL,
     }),
     TaskModule,
+    TodoModule,
   ],
   providers: [],
 })

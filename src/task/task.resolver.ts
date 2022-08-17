@@ -7,9 +7,10 @@ import { DeleteTaskInput, DeleteTaskOutput } from './dtos/delete-task.dto'
 import { EditTaskInput, EditTaskOutput } from './dtos/edit-task.dto'
 import { GetTaskInput, GetTaskOutput } from './dtos/get-task.dto'
 import { GetTasksInput, GetTasksOutput } from './dtos/get-tasks.dto'
+import { Task } from './entities/task.entity'
 import { TaskService } from './task.service'
 
-@Resolver()
+@Resolver((of) => Task)
 export class TaskResolver {
   constructor(private readonly taskService: TaskService) {}
 
