@@ -7,6 +7,8 @@ import { TagRepository } from '../tag/repositories/tag.repository'
 import { User } from '../user/entities/user.entity'
 import { TASKS_PER_PAGE } from './constants/task.constants'
 import { CreateTaskInput, CreateTaskOutput } from './dtos/create-task.dto'
+import { DeleteTaskInput, DeleteTaskOutput } from './dtos/delete-task.dto'
+import { GetTaskInput, GetTaskOutput } from './dtos/get-task.dto'
 import { GetTasksInput, GetTasksOutput } from './dtos/get-tasks.dto'
 import { Task } from './entities/task.entity'
 
@@ -55,7 +57,7 @@ export class TaskService {
       console.error(error)
       return {
         ok: false,
-        error,
+        error: errorMessage.ko.common.internalError + 'createTask',
       }
     }
   }
@@ -89,6 +91,59 @@ export class TaskService {
       return {
         ok: false,
         error: errorMessage.ko.common.internalError + 'getTasks',
+      }
+    }
+  }
+  async getTask(getTaskInput: GetTaskInput): Promise<GetTaskOutput> {
+    try {
+      const task = await this.tasks.findOne({ where: { id: getTaskInput.id } })
+      if (!task) {
+        return {
+          ok: false,
+          error: errorMessage.ko.task.notFound,
+        }
+      }
+      return {
+        ok: true,
+        task,
+      }
+    } catch (error) {
+      console.error(error)
+      return {
+        ok: false,
+        error: errorMessage.ko.common.internalError + 'getTask',
+      }
+    }
+  }
+  async deleteTask(
+    creator: User,
+    deleteTaskInput: DeleteTaskInput,
+  ): Promise<DeleteTaskOutput> {
+    try {
+      const task = await this.tasks.findOne({
+        where: { id: deleteTaskInput.id },
+      })
+      if (!task) {
+        return {
+          ok: false,
+          error: errorMessage.ko.task.notFound,
+        }
+      }
+      if (task.creatorId !== creator.id) {
+        return {
+          ok: false,
+          error: errorMessage.ko.task.notAuthorized,
+        }
+      }
+      await this.tasks.delete(deleteTaskInput.id)
+      return {
+        ok: true,
+      }
+    } catch (error) {
+      console.error(error)
+      return {
+        ok: false,
+        error: errorMessage.ko.common.internalError + 'deleteTask',
       }
     }
   }

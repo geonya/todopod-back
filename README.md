@@ -56,9 +56,9 @@ _220805_ ~ _220830_
   - [ ] CRUD Task
     - [x] Create
     - [x] Get All Tasks with Pagination
-    - [ ] Get a Task
+    - [x] Get a Task
     - [ ] Edit Task
-    - [ ] Delete Task
+    - [x] Delete Task
 - [ ] Todo Model
 - [ ] Photo Model
 - [ ] Estimate Model
