@@ -5,6 +5,7 @@ import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm'
 import { CoreEntity } from '../../common/entities/core.entity'
 import * as bcrypt from 'bcrypt'
 import { Project } from '../../project/entities/project.entity'
+import { Task } from '../../task/entities/task.entity'
 
 export enum UserRole {
   Client = 'Client',
@@ -63,6 +64,10 @@ export class User extends CoreEntity {
     nullable: true,
   })
   projects?: Project[]
+
+  @Field((type) => [Task], { nullable: true })
+  @OneToMany((type) => Task, (task) => task.creator, { nullable: true })
+  tasks?: Task[]
 
   @Field((type) => Boolean, { defaultValue: false })
   verified: boolean

@@ -38,13 +38,12 @@ export class ProjectService {
         createProjectInput.tagNames &&
         createProjectInput.tagNames.length > 0
       ) {
-        const tagsArr = await Promise.all(
-          createProjectInput.tagNames.map(async (name) => {
-            const tag = await this.tags.getOrCreate(name)
-            return tag
-          }),
+        const tags = await Promise.all(
+          createProjectInput.tagNames.map(
+            async (name) => await this.tags.getOrCreate(name),
+          ),
         )
-        newProject.tags = tagsArr
+        newProject.tags = tags
       }
       await this.projects.save(newProject)
       return {
@@ -172,7 +171,6 @@ export class ProjectService {
     user: User,
     getProjectInput: GetProjectInput,
   ): Promise<GetProjectOutput> {
-    console.log(getProjectInput)
     try {
       const project = await this.projects.findOne({
         where: { id: getProjectInput.id },

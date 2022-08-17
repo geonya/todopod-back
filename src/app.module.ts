@@ -15,6 +15,7 @@ import { JwtMiddleware } from './jwt/jwt.middleware'
 import { AuthModule } from './auth/auth.module'
 import { ProjectModule } from './project/project.module'
 import { EmailModule } from './email/email.module'
+import { TaskModule } from './task/task.module';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { EmailModule } from './email/email.module'
       domain: process.env.MAILGUN_DOMAIN_NAME,
       fromEmail: process.env.MAILGUN_FROM_EMAIL,
     }),
+    TaskModule,
   ],
   providers: [],
 })

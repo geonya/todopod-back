@@ -1,4 +1,4 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql'
+import { Field, InputType, Int, ObjectType } from '@nestjs/graphql'
 import { IsString, Length } from 'class-validator'
 import {
   Column,
@@ -6,23 +6,22 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
-  OneToMany,
   RelationId,
 } from 'typeorm'
 import { CoreEntity } from '../../common/entities/core.entity'
+import { Project } from '../../project/entities/project.entity'
 import { Tag } from '../../tag/entities/tag.entity'
-import { Task } from '../../task/entities/task.entity'
 import { User } from '../../user/entities/user.entity'
 
-@InputType('ProjectInputType')
+@InputType('TaskInputType', { isAbstract: true })
 @ObjectType()
 @Entity()
-export class Project extends CoreEntity {
+export class Task extends CoreEntity {
   @Column()
   @Field((type) => String)
   @IsString()
   @Length(2, 20)
-  title: string
+  name: string
 
   @Column({ nullable: true })
   @Field((type) => String, { nullable: true })
@@ -30,19 +29,22 @@ export class Project extends CoreEntity {
   @Length(2, 100)
   description?: string
 
-  @ManyToOne((type) => User, (user) => user.projects)
+  @ManyToOne((type) => User, (user) => user.tasks)
   @Field((type) => User)
   creator: User
 
-  @RelationId((project: Project) => project.creator)
+  @RelationId((task: Task) => task.creator)
   creatorId: number
 
-  @Field((type) => [Task], { nullable: true })
-  @OneToMany((type) => Task, (task) => task.project, { nullable: true })
-  tasks?: Task[]
+  @ManyToOne((type) => Project, (project) => project.tasks)
+  project: Project
 
-  @Field((type) => [Tag])
-  @ManyToMany((type) => Tag, { eager: true })
+  @RelationId((task: Task) => task.project)
+  @Field((type) => Int)
+  projectId: number
+
+  @Field((type) => [Tag], { nullable: true })
+  @ManyToMany((type) => Tag, { eager: true, nullable: true })
   @JoinTable()
-  tags: Tag[]
+  tags?: Tag[]
 }

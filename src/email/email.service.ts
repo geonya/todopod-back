@@ -28,7 +28,7 @@ export class EmailService {
         template,
         'h:X-Mailgun-Variables': JSON.stringify(emailVars),
       }
-      mg.messages().send(data, (error, body) => {
+      await mg.messages().send(data, (error, body) => {
         if (error) {
           throw new Error(error.message)
         }
