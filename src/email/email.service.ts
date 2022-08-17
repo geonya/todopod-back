@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { CONFIG_OPTIONS } from '../jwt/jwt.constats'
-import { EmailModuleOptions, IEmailVars } from './email.interfaces'
+import { EmailModuleOptions } from './email.interfaces'
 import mailgun from 'mailgun-js'
-import errorMessage from '../common/constants/error-messages.constants'
+import { SendEmailInput, SendEmailOutput } from './dtos/send-email.dto'
 
 @Injectable()
 export class EmailService {
@@ -10,12 +10,12 @@ export class EmailService {
     @Inject(CONFIG_OPTIONS) private readonly options: EmailModuleOptions,
   ) {}
 
-  async sendEmail(
-    subject: string,
-    template: string,
-    emailVars: IEmailVars,
-    to: string,
-  ): Promise<boolean> {
+  async sendEmail({
+    subject,
+    to,
+    template,
+    emailVars,
+  }: SendEmailInput): Promise<SendEmailOutput> {
     try {
       const mg = mailgun({
         apiKey: this.options.apiKey,
@@ -34,10 +34,15 @@ export class EmailService {
         }
         console.log(body)
       })
-      return true
+      return {
+        ok: true,
+      }
     } catch (error) {
       console.error(error)
-      return false
+      return {
+        ok: false,
+        error,
+      }
     }
   }
 }

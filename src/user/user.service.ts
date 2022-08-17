@@ -17,6 +17,8 @@ import {
 import errorMessage from '../common/constants/error-messages.constants'
 import { VerifyEmailInput, VerifyEmailOutput } from './dtos/verify-email.dto'
 import { Verification } from './entities/verification.entity'
+import { EmailService } from '../email/email.service'
+import { VERIFY_EMAIL_SUBJECT } from '../email/constants/send-email.constants'
 
 @Injectable()
 export class UserService {
@@ -25,6 +27,7 @@ export class UserService {
     @InjectRepository(Verification)
     private readonly verifications: Repository<Verification>,
     private readonly jwtService: JwtService,
+    private readonly eMailService: EmailService,
   ) {}
 
   async createAccount(
@@ -42,7 +45,21 @@ export class UserService {
           error: errorMessage.ko.user.emailExisting,
         }
       }
-      await this.users.save(this.users.create({ ...createAccountInput }))
+      const user = await this.users.save(
+        this.users.create({ ...createAccountInput }),
+      )
+      const verification = await this.verifications.save(
+        this.verifications.create({ user }),
+      )
+      await this.eMailService.sendEmail({
+        subject: VERIFY_EMAIL_SUBJECT,
+        to: 'geony@signpod.co.kr', // user.email
+        template: 'email-verify',
+        emailVars: {
+          username: user.name,
+          code: verification.code,
+        },
+      })
       return { ok: true }
     } catch (error) {
       console.error(error)
@@ -137,14 +154,29 @@ export class UserService {
         user.name = name
       }
       if (email) {
-        const emailUser = await this.users.findOne({ where: { email } })
-        if (emailUser) {
+        const existingUser = await this.users.findOne({ where: { email } })
+        if (existingUser) {
           return {
             ok: false,
             error: errorMessage.ko.user.emailExisting,
           }
         }
         user.email = email
+        user.verified = false
+        await this.verifications.delete({ user: { id } })
+        const verification = await this.verifications.save(
+          this.verifications.create({ user }),
+        )
+
+        await this.eMailService.sendEmail({
+          subject: VERIFY_EMAIL_SUBJECT,
+          to: 'geony@signpod.co.kr', // user.email
+          template: 'email-verify',
+          emailVars: {
+            username: user.name,
+            code: verification.code,
+          },
+        })
       }
       if (password) {
         user.password = password
@@ -220,10 +252,10 @@ export class UserService {
           ok: true,
         }
       }
-      return { ok: false, error: 'verification not found' }
+      return { ok: false, error: errorMessage.ko.verify.notFound }
     } catch (error) {
       console.error(error)
-      return { ok: false, error }
+      return { ok: false, error: errorMessage.ko.common + 'verifyEmail' }
     }
   }
 }
