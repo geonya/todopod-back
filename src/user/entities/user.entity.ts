@@ -6,6 +6,7 @@ import { CoreEntity } from '../../common/entities/core.entity'
 import * as bcrypt from 'bcrypt'
 import { Project } from '../../project/entities/project.entity'
 import { Task } from '../../task/entities/task.entity'
+import { Comment } from '../../project/entities/comment.entity'
 
 export enum UserRole {
   Client = 'Client',
@@ -68,6 +69,10 @@ export class User extends CoreEntity {
   @Field((type) => [Task], { nullable: true })
   @OneToMany((type) => Task, (task) => task.creator, { nullable: true })
   tasks?: Task[]
+
+  @Field((type) => [Comment], { nullable: true })
+  @OneToMany((type) => Comment, (comment) => comment.user, { nullable: true })
+  comments?: Comment[]
 
   @Field((type) => Boolean, { defaultValue: false })
   verified: boolean

@@ -8,6 +8,7 @@ import { User } from '../user/entities/user.entity'
 import { TASKS_PER_PAGE } from './constants/task.constants'
 import { CreateTaskInput, CreateTaskOutput } from './dtos/create-task.dto'
 import { DeleteTaskInput, DeleteTaskOutput } from './dtos/delete-task.dto'
+import { EditTaskInput, EditTaskOutput } from './dtos/edit-task.dto'
 import { GetTaskInput, GetTaskOutput } from './dtos/get-task.dto'
 import { GetTasksInput, GetTasksOutput } from './dtos/get-tasks.dto'
 import { Task } from './entities/task.entity'
@@ -144,6 +145,49 @@ export class TaskService {
       return {
         ok: false,
         error: errorMessage.ko.common.internalError + 'deleteTask',
+      }
+    }
+  }
+
+  async editTask(
+    creator: User,
+    editTaskInput: EditTaskInput,
+  ): Promise<EditTaskOutput> {
+    try {
+      const task = await this.tasks.findOne({ where: { id: editTaskInput.id } })
+      if (!task) {
+        return {
+          ok: false,
+          error: errorMessage.ko.task.notFound,
+        }
+      }
+      if (task.creatorId !== creator.id) {
+        return {
+          ok: false,
+          error: errorMessage.ko.task.notAuthorized,
+        }
+      }
+      if (editTaskInput.name) {
+        task.name = editTaskInput.name
+      }
+      if (editTaskInput.description) {
+        task.description = editTaskInput.name
+      }
+      if (editTaskInput.tagNames && editTaskInput.tagNames.length > 0) {
+        const tags = await Promise.all(
+          editTaskInput.tagNames.map(
+            async (name) => await this.tags.getOrCreate(name),
+          ),
+        )
+        task.tags = tags
+      }
+      await this.tasks.save(task)
+      return { ok: true }
+    } catch (error) {
+      console.error(error)
+      return {
+        ok: false,
+        error: errorMessage.ko.common.internalError + 'editTaske',
       }
     }
   }

@@ -28,7 +28,7 @@ _220805_ ~ _220830_
   - [x] Delete Account Mutation
   - [x] User Service Unit Testing
   - [x] Email Validation (mailgun) 220817
-  - [ ] Relation with Projects
+  - [x] Relation with Projects
   - [x] Realation with Tasks
   - [ ] Relation with Todos
   - [ ] Relation with Photos
@@ -46,19 +46,21 @@ _220805_ ~ _220830_
   - [ ] Relation with Task
   - [ ] Relation with Photos
   - [ ] Relation with Estimates
+  - [x] Comment Entity
   - [ ] Unit Testing
 - [x] Tag Model
   - [x] Create Tag
 - [ ] Task Model
   - [x] Task Entity
-  - [x] User Relation
-  - [x] Project Relaction
-  - [ ] CRUD Task
+  - [x] Relation with User
+  - [x] Relation with Project
+  - [x] CRUD Task
     - [x] Create
     - [x] Get All Tasks with Pagination
     - [x] Get a Task
-    - [ ] Edit Task
+    - [x] Edit Task
     - [x] Delete Task
+  - [ ] Relation with Todo
 - [ ] Todo Model
 - [ ] Photo Model
 - [ ] Estimate Model

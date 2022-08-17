@@ -13,8 +13,9 @@ import { CoreEntity } from '../../common/entities/core.entity'
 import { Tag } from '../../tag/entities/tag.entity'
 import { Task } from '../../task/entities/task.entity'
 import { User } from '../../user/entities/user.entity'
+import { Comment } from './comment.entity'
 
-@InputType('ProjectInputType')
+@InputType('ProjectInputType', { isAbstract: true })
 @ObjectType()
 @Entity()
 export class Project extends CoreEntity {
@@ -40,6 +41,12 @@ export class Project extends CoreEntity {
   @Field((type) => [Task], { nullable: true })
   @OneToMany((type) => Task, (task) => task.project, { nullable: true })
   tasks?: Task[]
+
+  @Field((type) => [Comment], { nullable: true })
+  @OneToMany((type) => Comment, (comment) => comment.project, {
+    nullable: true,
+  })
+  comments?: Comment[]
 
   @Field((type) => [Tag])
   @ManyToMany((type) => Tag, { eager: true })

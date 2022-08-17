@@ -4,6 +4,7 @@ import { Role } from '../auth/role.decorator'
 import { User } from '../user/entities/user.entity'
 import { CreateTaskInput, CreateTaskOutput } from './dtos/create-task.dto'
 import { DeleteTaskInput, DeleteTaskOutput } from './dtos/delete-task.dto'
+import { EditTaskInput, EditTaskOutput } from './dtos/edit-task.dto'
 import { GetTaskInput, GetTaskOutput } from './dtos/get-task.dto'
 import { GetTasksInput, GetTasksOutput } from './dtos/get-tasks.dto'
 import { TaskService } from './task.service'
@@ -42,5 +43,14 @@ export class TaskResolver {
     @Args('input') deleteTaskInput: DeleteTaskInput,
   ): Promise<DeleteTaskOutput> {
     return this.taskService.deleteTask(creator, deleteTaskInput)
+  }
+
+  @Mutation((returns) => EditTaskOutput)
+  @Role(['Producer', 'Admin'])
+  editTask(
+    @AuthUser() creator: User,
+    @Args('input') editTaskInput: EditTaskInput,
+  ): Promise<EditTaskOutput> {
+    return this.taskService.editTask(creator, editTaskInput)
   }
 }

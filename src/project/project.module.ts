@@ -3,13 +3,14 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { TypeOrmExModule } from '../common/repositories/typeorm-ex-module'
 import { Tag } from '../tag/entities/tag.entity'
 import { TagRepository } from '../tag/repositories/tag.repository'
+import { Comment } from './entities/comment.entity'
 import { Project } from './entities/project.entity'
 import { ProjectResolver } from './project.resolver'
 import { ProjectService } from './project.service'
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Project, Tag]),
+    TypeOrmModule.forFeature([Project, Tag, Comment]),
     TypeOrmExModule.forCustomRepository([TagRepository]),
   ],
   providers: [ProjectService, ProjectResolver],
