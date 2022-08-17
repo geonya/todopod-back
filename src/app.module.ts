@@ -14,7 +14,6 @@ import { JwtModule } from './jwt/jwt.module'
 import { JwtMiddleware } from './jwt/jwt.middleware'
 import { AuthModule } from './auth/auth.module'
 import { ProjectModule } from './project/project.module'
-import { TagModule } from './tag/tag.module'
 import { EmailModule } from './email/email.module'
 
 @Module({

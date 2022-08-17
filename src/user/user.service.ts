@@ -167,7 +167,6 @@ export class UserService {
         const verification = await this.verifications.save(
           this.verifications.create({ user }),
         )
-
         await this.eMailService.sendEmail({
           subject: VERIFY_EMAIL_SUBJECT,
           to: 'geony@signpod.co.kr', // user.email

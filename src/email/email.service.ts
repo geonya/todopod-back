@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { CONFIG_OPTIONS } from '../jwt/jwt.constats'
 import { EmailModuleOptions } from './email.interfaces'
-import mailgun from 'mailgun-js'
+import * as mailgun from 'mailgun-js'
 import { SendEmailInput, SendEmailOutput } from './dtos/send-email.dto'
 
 @Injectable()
@@ -26,7 +26,7 @@ export class EmailService {
         to,
         subject,
         template,
-        emailVars,
+        'h:X-Mailgun-Variables': JSON.stringify(emailVars),
       }
       mg.messages().send(data, (error, body) => {
         if (error) {
