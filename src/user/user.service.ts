@@ -15,11 +15,15 @@ import {
   DeleteAccountOutput,
 } from './dtos/delete-account.dto'
 import errorMessage from '../common/constants/error-messages.constants'
+import { VerifyEmailInput, VerifyEmailOutput } from './dtos/verify-email.dto'
+import { Verification } from './entities/verification.entity'
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private readonly users: Repository<User>,
+    @InjectRepository(Verification)
+    private readonly verifications: Repository<Verification>,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -200,6 +204,26 @@ export class UserService {
         ok: false,
         error: errorMessage.ko.common + 'deleteAccount',
       }
+    }
+  }
+  async verifyEmail({ code }: VerifyEmailInput): Promise<VerifyEmailOutput> {
+    try {
+      const verification = await this.verifications.findOne({
+        where: { code },
+        relations: { user: true },
+      })
+      if (verification) {
+        verification.user.verified = true
+        await this.users.save(verification.user)
+        await this.verifications.delete(verification.id)
+        return {
+          ok: true,
+        }
+      }
+      return { ok: false, error: 'verification not found' }
+    } catch (error) {
+      console.error(error)
+      return { ok: false, error }
     }
   }
 }

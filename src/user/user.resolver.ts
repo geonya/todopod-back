@@ -9,6 +9,7 @@ import {
 } from '@nestjs/graphql'
 import { AuthUser } from '../auth/auth-user.decorator'
 import { AuthGuard } from '../auth/auth.guard'
+import { Role } from '../auth/role.decorator'
 import {
   CreateAccountInput,
   CreateAccountOutput,
@@ -24,7 +25,8 @@ import {
 } from './dtos/find-user-by-id.dto'
 import { LoginInput, LoginOutput } from './dtos/login.dto'
 import { MyProfileOutput } from './dtos/myProfile.dto'
-import { User } from './entities/user.entity'
+import { VerifyEmailInput, VerifyEmailOutput } from './dtos/verify-email.dto'
+import { User, UserRole } from './entities/user.entity'
 import { UserService } from './user.service'
 
 @Resolver((of) => User)
@@ -33,6 +35,7 @@ export class UserResolver {
 
   // Queries
   @Query((returns) => FindUserByIdOutput)
+  @Role(['Any'])
   findUserById(
     @Args('input') { id }: FindUserByIdInput,
   ): Promise<FindUserByIdOutput> {
@@ -40,7 +43,7 @@ export class UserResolver {
   }
 
   @Query((returns) => MyProfileOutput)
-  @UseGuards(AuthGuard)
+  @Role(['Any'])
   getMyProfile(@AuthUser() authUser: User): Promise<MyProfileOutput> {
     return this.userService.getMyProfile(authUser)
   }
@@ -59,7 +62,7 @@ export class UserResolver {
   }
 
   @Mutation((returns) => EditAccountOutput)
-  @UseGuards(AuthGuard)
+  @Role(['Any'])
   editAccount(
     @AuthUser() { id }: User,
     @Args('input') editAccountInput: EditAccountInput,
@@ -68,11 +71,19 @@ export class UserResolver {
   }
 
   @Mutation((returns) => DeleteAccountOutput)
-  @UseGuards(AuthGuard)
+  @Role(['Any'])
   deleteAccount(
     @AuthUser() user: User,
     @Args('input') deleteAccountInput: DeleteAccountInput,
   ) {
     return this.userService.deleteAccount(user, deleteAccountInput)
+  }
+
+  @Mutation((returns) => VerifyEmailOutput)
+  @Role(['Any'])
+  verifyEmail(
+    @Args('input') verifyEmailInput: VerifyEmailInput,
+  ): Promise<VerifyEmailOutput> {
+    return this.userService.verifyEmail(verifyEmailInput)
   }
 }

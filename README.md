@@ -27,7 +27,7 @@ _220805_ ~ _220830_
   - [x] Edit Account Mutation
   - [x] Delete Account Mutation
   - [x] User Service Unit Testing
-  - [ ] Email Validation
+  - [ ] Email Validation (mailgun)
 - [ ] Project Model
   - [x] Project Entity
   - [x] User Relation

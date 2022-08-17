@@ -15,6 +15,7 @@ import { JwtMiddleware } from './jwt/jwt.middleware'
 import { AuthModule } from './auth/auth.module'
 import { ProjectModule } from './project/project.module'
 import { TagModule } from './tag/tag.module'
+import { EmailModule } from './email/email.module'
 
 @Module({
   imports: [
@@ -30,6 +31,9 @@ import { TagModule } from './tag/tag.module'
         DB_PASSWORD: Joi.string().required(),
         DB_DATABASE: Joi.string().required(),
         PRIVATE_KEY: Joi.string().required(),
+        MAILGUN_API_KEY: Joi.string().required(),
+        MAILGUN_DOMAIN_NAME: Joi.string().required(),
+        MAILGUN_FROM_EMAIL: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRoot({
@@ -55,6 +59,11 @@ import { TagModule } from './tag/tag.module'
     UserModule,
     AuthModule,
     ProjectModule,
+    EmailModule.forRoot({
+      apiKey: process.env.MAILGUN_API_KEY,
+      domain: process.env.MAILGUN_DOMAIN_NAME,
+      fromEmail: process.env.MAILGUN_FROM_EMAIL,
+    }),
   ],
   providers: [],
 })
