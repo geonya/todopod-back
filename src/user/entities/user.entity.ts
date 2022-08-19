@@ -8,6 +8,7 @@ import { Project } from '../../project/entities/project.entity'
 import { Task } from '../../task/entities/task.entity'
 import { Comment } from '../../project/entities/comment.entity'
 import { Todo } from '../../todo/entities/todo.entity'
+import { Photo } from '../../photo/entities/photo.entity'
 
 export enum UserRole {
   Client = 'Client',
@@ -81,6 +82,10 @@ export class User extends CoreEntity {
 
   @Field((type) => Boolean, { defaultValue: false })
   verified: boolean
+
+  @Field((type) => [Photo], { nullable: true })
+  @OneToMany((type) => Photo, (photo) => photo.creator, { nullable: true })
+  photos?: Photo[]
 
   @BeforeInsert()
   @BeforeUpdate()

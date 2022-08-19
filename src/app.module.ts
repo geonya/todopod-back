@@ -15,8 +15,10 @@ import { JwtMiddleware } from './jwt/jwt.middleware'
 import { AuthModule } from './auth/auth.module'
 import { ProjectModule } from './project/project.module'
 import { EmailModule } from './email/email.module'
-import { TaskModule } from './task/task.module';
-import { TodoModule } from './todo/todo.module';
+import { TaskModule } from './task/task.module'
+import { TodoModule } from './todo/todo.module'
+import { PhotoModule } from './photo/photo.module'
+import { graphqlUploadExpress } from 'graphql-upload-minimal'
 
 @Module({
   imports: [
@@ -35,6 +37,10 @@ import { TodoModule } from './todo/todo.module';
         MAILGUN_API_KEY: Joi.string().required(),
         MAILGUN_DOMAIN_NAME: Joi.string().required(),
         MAILGUN_FROM_EMAIL: Joi.string().required(),
+        AWS_REGION: Joi.string().required(),
+        AWS_ACCESS_KEY_ID: Joi.string().required(),
+        AWS_SECRET_ACCESS_KEY: Joi.string().required(),
+        AWS_PUBLIC_BUCKET_NAME: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRoot({
@@ -67,13 +73,14 @@ import { TodoModule } from './todo/todo.module';
     }),
     TaskModule,
     TodoModule,
+    PhotoModule,
   ],
   providers: [],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(JwtMiddleware)
+      .apply(JwtMiddleware, graphqlUploadExpress())
       .forRoutes({ path: '/graphql', method: RequestMethod.POST })
   }
 }

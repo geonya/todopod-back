@@ -47,6 +47,7 @@ _220805_ ~ _220830_
   - [ ] Relation with Photos
   - [ ] Relation with Estimates
   - [x] Comment Entity
+    - [ ] Relation with User
   - [ ] Unit Testing
 - [x] Tag Model
   - [x] Create Tag
@@ -62,6 +63,7 @@ _220805_ ~ _220830_
     - [x] Delete Task
   - [ ] Relation with Todo
 - [ ] Todo Model
+
   - [x] Todo entity
   - [x] Relation with User
   - [x] Relation with Task
@@ -73,5 +75,15 @@ _220805_ ~ _220830_
     - [x] Edit Todo
       - [x] Edit Progress (Pending, Doing, Done)
     - [x] Delete Todo
+
 - [ ] Photo Model
-- [ ] Estimate Model
+
+  - [ ] Model Setup
+  - [ ] User / Project / Task Relation
+  - [ ] AWS S3 upload setup
+  - [ ] CRUD
+
+- [ ] Team
+  - [ ] User Relation
+  - [ ] Project Relation
+  - [ ] Taks Relation

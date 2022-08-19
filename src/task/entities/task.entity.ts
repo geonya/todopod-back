@@ -10,6 +10,7 @@ import {
   RelationId,
 } from 'typeorm'
 import { CoreEntity } from '../../common/entities/core.entity'
+import { Photo } from '../../photo/entities/photo.entity'
 import { Project } from '../../project/entities/project.entity'
 import { Tag } from '../../tag/entities/tag.entity'
 import { Todo } from '../../todo/entities/todo.entity'
@@ -53,4 +54,8 @@ export class Task extends CoreEntity {
   @ManyToMany((type) => Tag, { eager: true, nullable: true })
   @JoinTable()
   tags?: Tag[]
+
+  @Field((type) => [Photo], { nullable: true })
+  @OneToMany((type) => Photo, (photo) => photo.task, { nullable: true })
+  photos?: Photo[]
 }
