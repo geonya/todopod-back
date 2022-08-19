@@ -9,6 +9,7 @@ import { Project } from '../project/entities/project.entity'
 import { Task } from '../task/entities/task.entity'
 import { User } from '../user/entities/user.entity'
 import { CreatePhotoInput, CreatePhotoOutput } from './dtos/create-photo.dto'
+import { EditPhotoInput, EditPhotoOutput } from './dtos/edit-photo.dto'
 import { Photo } from './entities/photo.entity'
 
 @Injectable()
@@ -58,7 +59,7 @@ export class PhotoService {
         photo.task = task
       }
 
-      //s3 photo upload
+      //S3 photo upload
       const readStream = createReadStream()
       const s3 = new S3()
       const uploadResult = await s3
@@ -79,6 +80,38 @@ export class PhotoService {
       return {
         ok: false,
         error: errorMessage.ko.common.internalError + 'createPhoto',
+      }
+    }
+  }
+
+  async editPhoto(
+    creator: User,
+    { id, caption }: EditPhotoInput,
+  ): Promise<EditPhotoOutput> {
+    try {
+      const photo = await this.photos.findOne({ where: { id } })
+      if (!photo) {
+        return {
+          ok: false,
+          error: errorMessage.ko.photo.notFound,
+        }
+      }
+      if (creator.id !== photo.userId) {
+        return {
+          ok: false,
+          error: errorMessage.ko.photo.notAuthorized,
+        }
+      }
+      photo.caption = caption
+      await this.photos.save(photo)
+      return {
+        ok: true,
+      }
+    } catch (error) {
+      console.error(error)
+      return {
+        ok: false,
+        error: errorMessage.ko.common.internalError + 'editPhoto',
       }
     }
   }

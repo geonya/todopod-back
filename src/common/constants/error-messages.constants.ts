@@ -26,6 +26,10 @@ const errorMessage = {
       notFound: '존재하지 않는 Todo 입니다',
       notAuthorized: '해당 Todo에 대한 권한이 없습니다.',
     },
+    photo: {
+      notFound: '존재하지 않는 Photo 입니다',
+      notAuthorized: '해당 Photo에 대한 권한이 없습니다.',
+    },
     product: {},
   },
 }

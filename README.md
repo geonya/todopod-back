@@ -78,9 +78,9 @@ _220805_ ~ _220830_
 
 - [ ] Photo Model
 
-  - [ ] Model Setup
-  - [ ] User / Project / Task Relation
-  - [ ] AWS S3 upload setup
+  - [x] Model Setup
+  - [x] User / Project / Task Relation
+  - [x] AWS S3 upload setup
   - [ ] CRUD
 
 - [ ] Team

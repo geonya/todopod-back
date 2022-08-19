@@ -1,4 +1,4 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql'
+import { Field, InputType, Int, ObjectType } from '@nestjs/graphql'
 import { Column, Entity, ManyToOne, RelationId } from 'typeorm'
 import { CoreEntity } from '../../common/entities/core.entity'
 import { Project } from '../../project/entities/project.entity'
@@ -30,12 +30,14 @@ export class Photo extends CoreEntity {
   @ManyToOne((type) => Project, (project) => project.photos, { nullable: true })
   project?: Project
 
+  @Field((type) => Int, { nullable: true })
   @RelationId((photo: Photo) => photo.project)
-  projectId: number
+  projectId?: number
 
   @ManyToOne((type) => Task, (task) => task.photos, { nullable: true })
   task?: Task
 
+  @Field((type) => Int, { nullable: true })
   @RelationId((photo: Photo) => photo.task)
   taskId: number
 }
