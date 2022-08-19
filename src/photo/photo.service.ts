@@ -9,6 +9,7 @@ import { Project } from '../project/entities/project.entity'
 import { Task } from '../task/entities/task.entity'
 import { User } from '../user/entities/user.entity'
 import { CreatePhotoInput, CreatePhotoOutput } from './dtos/create-photo.dto'
+import { DeletePhotoInput, DeletePhotoOutput } from './dtos/delete-photo.dto'
 import { EditPhotoInput, EditPhotoOutput } from './dtos/edit-photo.dto'
 import { Photo } from './entities/photo.entity'
 
@@ -112,6 +113,45 @@ export class PhotoService {
       return {
         ok: false,
         error: errorMessage.ko.common.internalError + 'editPhoto',
+      }
+    }
+  }
+
+  async deletePhoto(
+    creator: User,
+    { id }: DeletePhotoInput,
+  ): Promise<DeletePhotoOutput> {
+    try {
+      const photo = await this.photos.findOne({ where: { id } })
+      if (!photo) {
+        return {
+          ok: false,
+          error: errorMessage.ko.photo.notFound,
+        }
+      }
+      if (creator.id !== photo.userId) {
+        return {
+          ok: false,
+          error: errorMessage.ko.photo.notAuthorized,
+        }
+      }
+      // delete photo
+      const s3 = new S3()
+      await s3
+        .deleteObject({
+          Bucket: this.configService.get('AWS_PUBLIC_BUCKET_NAME'),
+          Key: photo.key,
+        })
+        .promise()
+      await this.photos.delete(id)
+      return {
+        ok: true,
+      }
+    } catch (error) {
+      console.error(error)
+      return {
+        ok: false,
+        error: errorMessage.ko.common.internalError + 'deletePhoto',
       }
     }
   }

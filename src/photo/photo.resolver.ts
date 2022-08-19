@@ -4,6 +4,7 @@ import { AuthUser } from '../auth/auth-user.decorator'
 import { Role } from '../auth/role.decorator'
 import { User } from '../user/entities/user.entity'
 import { CreatePhotoInput, CreatePhotoOutput } from './dtos/create-photo.dto'
+import { DeletePhotoInput, DeletePhotoOutput } from './dtos/delete-photo.dto'
 import { EditPhotoInput, EditPhotoOutput } from './dtos/edit-photo.dto'
 import { Photo } from './entities/photo.entity'
 import { PhotoService } from './photo.service'
@@ -31,5 +32,14 @@ export class PhotoResolver {
     @Args('input') editPhotoInput: EditPhotoInput,
   ): Promise<EditPhotoOutput> {
     return this.photoService.editPhoto(creator, editPhotoInput)
+  }
+
+  @Mutation((returns) => DeletePhotoOutput)
+  @Role(['Any'])
+  async deletePhoto(
+    @AuthUser() creator: User,
+    @Args('input') deletePhotoInput: DeletePhotoInput,
+  ): Promise<DeletePhotoOutput> {
+    return this.photoService.deletePhoto(creator, deletePhotoInput)
   }
 }
