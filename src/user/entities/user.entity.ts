@@ -76,7 +76,7 @@ export class User extends CoreEntity {
     nullable: true,
     onDelete: 'SET NULL',
   })
-  projects?: Project[]
+  myProjects?: Project[]
 
   @Field((type) => [Task], { nullable: true })
   @OneToMany((type) => Task, (task) => task.creator, {

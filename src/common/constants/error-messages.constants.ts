@@ -14,6 +14,8 @@ const errorMessage = {
     project: {
       notFound: '존재하지 않는 프로젝트입니다.',
       notAuthorized: '해당 Project에 대한 권한이 없습니다.',
+      thisIsCreator: '프로젝트의 creator 입니다.',
+      notMember: '프로젝트 Members 에 존재하지 않습니다.',
     },
     verify: {
       notFound: '인증 코드가 존재하지 않습니다.',

@@ -32,12 +32,17 @@ export class Project extends CoreEntity {
   @Length(2, 100)
   description?: string
 
-  @ManyToOne((type) => User, (user) => user.projects, { onDelete: 'CASCADE' })
+  @ManyToOne((type) => User, (user) => user.myProjects, { onDelete: 'CASCADE' })
   @Field((type) => User)
   creator: User
 
   @RelationId((project: Project) => project.creator)
   creatorId: number
+
+  @Field((type) => [User])
+  @ManyToMany((type) => User, { eager: true })
+  @JoinTable()
+  members: User[]
 
   @Field((type) => [Task], { nullable: true })
   @OneToMany((type) => Task, (task) => task.project, {

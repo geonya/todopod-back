@@ -1,5 +1,5 @@
 import { Field, InputType, ObjectType, PickType } from '@nestjs/graphql'
-import { IsString } from 'class-validator'
+import { IsOptional, IsString } from 'class-validator'
 import { CoreOutput } from '../../common/dtos/output.dto'
 import { Project } from '../entities/project.entity'
 
@@ -9,6 +9,7 @@ export class CreateProjectInput extends PickType(Project, [
   'description',
 ]) {
   @Field((type) => [String], { nullable: true })
+  @IsOptional()
   @IsString({ each: true })
   tagNames?: string[]
 }

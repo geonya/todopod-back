@@ -89,9 +89,11 @@ _220805_ ~ _220830_
 
   - [x] Members : Users Relation
   - [x] invite / withdraw member
-  - [ ] Project Relation
-  - [ ] Task Relation
 
 - [ ] Estimate
+
   - [ ] MODEL / CRUD Estimate
   - [ ] EXCEL/PDF Manager
+
+- Chat
+  - [ ] Subscription Setup

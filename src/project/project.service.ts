@@ -23,7 +23,8 @@ export class ProjectService {
   constructor(
     @InjectRepository(Project)
     private readonly projects: Repository<Project>,
-
+    @InjectRepository(User)
+    private readonly users: Repository<User>,
     private readonly tags: TagRepository,
   ) {}
 
@@ -45,6 +46,7 @@ export class ProjectService {
         )
         newProject.tags = tags
       }
+      newProject.members = [creator]
       await this.projects.save(newProject)
       return {
         ok: true,
@@ -88,6 +90,51 @@ export class ProjectService {
           }),
         )
         project.tags = tagsArr
+      }
+      if (editProjectInput.inviteUserId) {
+        const user = await this.users.findOne({
+          where: {
+            id: editProjectInput.inviteUserId,
+          },
+        })
+        if (!user) {
+          return {
+            ok: false,
+            error: errorMessage.ko.user.userNotFound,
+          }
+        }
+        project.members = [...project.members, user]
+      }
+      if (editProjectInput.withdrawUserId) {
+        if (project.creatorId === editProjectInput.withdrawUserId) {
+          return {
+            ok: false,
+            error: errorMessage.ko.project.thisIsCreator,
+          }
+        }
+        const user = await this.users.findOne({
+          where: {
+            id: editProjectInput.withdrawUserId,
+          },
+        })
+        if (!user) {
+          return {
+            ok: false,
+            error: errorMessage.ko.user.userNotFound,
+          }
+        }
+
+        if (
+          project.members.findIndex((member) => member.id === user.id) === -1
+        ) {
+          return {
+            ok: false,
+            error: errorMessage.ko.project.notMember,
+          }
+        }
+        project.members = project.members.filter(
+          (member) => member.id !== user.id,
+        )
       }
       await this.projects.save({
         ...project,
