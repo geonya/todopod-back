@@ -32,14 +32,16 @@ export class Task extends CoreEntity {
   @Length(2, 100)
   description?: string
 
-  @ManyToOne((type) => User, (user) => user.tasks)
+  @ManyToOne((type) => User, (user) => user.tasks, { onDelete: 'CASCADE' })
   @Field((type) => User)
   creator: User
 
   @RelationId((task: Task) => task.creator)
   creatorId: number
 
-  @ManyToOne((type) => Project, (project) => project.tasks)
+  @ManyToOne((type) => Project, (project) => project.tasks, {
+    onDelete: 'CASCADE',
+  })
   project: Project
 
   @RelationId((task: Task) => task.project)

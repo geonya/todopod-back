@@ -32,7 +32,7 @@ export class Project extends CoreEntity {
   @Length(2, 100)
   description?: string
 
-  @ManyToOne((type) => User, (user) => user.projects)
+  @ManyToOne((type) => User, (user) => user.projects, { onDelete: 'CASCADE' })
   @Field((type) => User)
   creator: User
 
@@ -40,7 +40,10 @@ export class Project extends CoreEntity {
   creatorId: number
 
   @Field((type) => [Task], { nullable: true })
-  @OneToMany((type) => Task, (task) => task.project, { nullable: true })
+  @OneToMany((type) => Task, (task) => task.project, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
   tasks?: Task[]
 
   @Field((type) => [Comment], { nullable: true })

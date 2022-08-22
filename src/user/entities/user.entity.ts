@@ -74,11 +74,15 @@ export class User extends CoreEntity {
   @Field((type) => [Project], { nullable: true })
   @OneToMany((type) => Project, (project) => project.creator, {
     nullable: true,
+    onDelete: 'SET NULL',
   })
   projects?: Project[]
 
   @Field((type) => [Task], { nullable: true })
-  @OneToMany((type) => Task, (task) => task.creator, { nullable: true })
+  @OneToMany((type) => Task, (task) => task.creator, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
   tasks?: Task[]
 
   @Field((type) => [Comment], { nullable: true })
@@ -96,12 +100,15 @@ export class User extends CoreEntity {
   @OneToMany((type) => Photo, (photo) => photo.creator, { nullable: true })
   photos?: Photo[]
 
-  @ManyToOne((type) => Team, (team) => team.users, { nullable: true })
+  @ManyToOne((type) => Team, (team) => team.users, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
   @Field((type) => Team, { nullable: true })
   team?: Team
 
   @RelationId((user: User) => user.team)
-  teamId: number
+  teamId?: number
 
   @BeforeInsert()
   @BeforeUpdate()

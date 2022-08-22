@@ -20,12 +20,12 @@ export class Team extends CoreEntity {
   @Length(2)
   name: string
 
-  @Column()
-  @Field((type) => Int)
+  @Column({ nullable: true })
+  @Field((type) => Int, { nullable: true })
   @IsInt()
   leaderId: number
 
-  @Field((type) => [User])
-  @OneToMany((type) => User, (user) => user.team)
+  @Field((type) => [User], { nullable: true })
+  @OneToMany((type) => User, (user) => user.team, { onDelete: 'SET NULL' })
   users?: User[]
 }

@@ -43,8 +43,8 @@ _220805_ ~ _220830_
     - [x] Pagination
   - [x] Edit Project
   - [x] Delete Project
-  - [ ] Relation with Task
-  - [ ] Relation with Photos
+  - [x] Relation with Task
+  - [x] Relation with Photos
   - [ ] Relation with Estimates
   - [x] Comment Entity
     - [ ] Relation with User
@@ -86,6 +86,12 @@ _220805_ ~ _220830_
     - [x] Delete Photo + Delete AWS S3 Bucket Object
 
 - [ ] Team
-  - [ ] Members : Users Relation
+
+  - [x] Members : Users Relation
+  - [x] invite / withdraw member
   - [ ] Project Relation
   - [ ] Task Relation
+
+- [ ] Estimate
+  - [ ] MODEL / CRUD Estimate
+  - [ ] EXCEL/PDF Manager

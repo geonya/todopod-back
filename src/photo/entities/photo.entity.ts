@@ -21,7 +21,7 @@ export class Photo extends CoreEntity {
   @Field((type) => String)
   caption: string
 
-  @ManyToOne((type) => User, (user) => user.photos)
+  @ManyToOne((type) => User, (user) => user.photos, { onDelete: 'CASCADE' })
   creator: User
 
   @RelationId((photo: Photo) => photo.creator)
