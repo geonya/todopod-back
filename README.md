@@ -67,7 +67,7 @@ _220805_ ~ _220830_
   - [x] Todo entity
   - [x] Relation with User
   - [x] Relation with Task
-  - [ ] Relation with Photo
+  - X Relation with Photo
   - [x] CRUD Todo
     - [x] Create
     - [x] Get Todos in Task with Pagination
@@ -81,9 +81,11 @@ _220805_ ~ _220830_
   - [x] Model Setup
   - [x] User / Project / Task Relation
   - [x] AWS S3 upload setup
-  - [ ] CRUD
+  - [x] CRUD
+    - [x] Edit Photo
+    - [x] Delete Photo + Delete AWS S3 Bucket Object
 
 - [ ] Team
-  - [ ] User Relation
+  - [ ] Members : Users Relation
   - [ ] Project Relation
-  - [ ] Taks Relation
+  - [ ] Task Relation

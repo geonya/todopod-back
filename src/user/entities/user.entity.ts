@@ -1,7 +1,15 @@
 import { InternalServerErrorException } from '@nestjs/common'
 import { Field, InputType, ObjectType, registerEnumType } from '@nestjs/graphql'
 import { IsEmail, IsEnum, IsString, Length } from 'class-validator'
-import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm'
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  RelationId,
+} from 'typeorm'
 import { CoreEntity } from '../../common/entities/core.entity'
 import * as bcrypt from 'bcrypt'
 import { Project } from '../../project/entities/project.entity'
@@ -9,6 +17,7 @@ import { Task } from '../../task/entities/task.entity'
 import { Comment } from '../../project/entities/comment.entity'
 import { Todo } from '../../todo/entities/todo.entity'
 import { Photo } from '../../photo/entities/photo.entity'
+import { Team } from '../../team/entities/team.entity'
 
 export enum UserRole {
   Client = 'Client',
@@ -86,6 +95,13 @@ export class User extends CoreEntity {
   @Field((type) => [Photo], { nullable: true })
   @OneToMany((type) => Photo, (photo) => photo.creator, { nullable: true })
   photos?: Photo[]
+
+  @ManyToOne((type) => Team, (team) => team.users, { nullable: true })
+  @Field((type) => Team, { nullable: true })
+  team?: Team
+
+  @RelationId((user: User) => user.team)
+  teamId: number
 
   @BeforeInsert()
   @BeforeUpdate()

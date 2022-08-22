@@ -30,7 +30,11 @@ const errorMessage = {
       notFound: '존재하지 않는 Photo 입니다',
       notAuthorized: '해당 Photo에 대한 권한이 없습니다.',
     },
-    product: {},
+    team: {
+      notFound: '존재하지 않는 Team 입니다',
+      userExisting: '이미 가입한 User 입니다.',
+      alreadyExisting: '존재하는 Team 이름입니다.',
+    },
   },
 }
 

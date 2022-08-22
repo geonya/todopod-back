@@ -19,6 +19,7 @@ import { TaskModule } from './task/task.module'
 import { TodoModule } from './todo/todo.module'
 import { PhotoModule } from './photo/photo.module'
 import { graphqlUploadExpress } from 'graphql-upload-minimal'
+import { TeamModule } from './team/team.module';
 
 @Module({
   imports: [
@@ -74,6 +75,7 @@ import { graphqlUploadExpress } from 'graphql-upload-minimal'
     TaskModule,
     TodoModule,
     PhotoModule,
+    TeamModule,
   ],
   providers: [],
 })

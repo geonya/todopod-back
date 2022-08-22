@@ -27,14 +27,20 @@ export class Photo extends CoreEntity {
   @RelationId((photo: Photo) => photo.creator)
   userId: number
 
-  @ManyToOne((type) => Project, (project) => project.photos, { nullable: true })
+  @ManyToOne((type) => Project, (project) => project.photos, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
   project?: Project
 
   @Field((type) => Int, { nullable: true })
   @RelationId((photo: Photo) => photo.project)
   projectId?: number
 
-  @ManyToOne((type) => Task, (task) => task.photos, { nullable: true })
+  @ManyToOne((type) => Task, (task) => task.photos, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
   task?: Task
 
   @Field((type) => Int, { nullable: true })
