@@ -3,7 +3,7 @@ import { IsInt } from 'class-validator'
 import { CoreOutput } from '../../common/dtos/output.dto'
 import { Project } from '../entities/project.entity'
 
-@InputType('GetProjectsInputType')
+@InputType('GetProjectsInput')
 export class GetProjectsInput {
   @Field((type) => Int, { defaultValue: 1 })
   @IsInt()

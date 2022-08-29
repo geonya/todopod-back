@@ -21,7 +21,6 @@ export class ProjectResolver {
   constructor(private readonly projectService: ProjectService) {}
 
   @Query((returns) => GetProjectsOutput)
-  @Role(['Any'])
   async getProjects(
     @Args('input')
     getProjectsInput: GetProjectsInput,

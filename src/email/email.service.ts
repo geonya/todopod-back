@@ -32,7 +32,6 @@ export class EmailService {
         if (error) {
           throw new Error(error.message)
         }
-        console.log(body)
       })
       return {
         ok: true,
