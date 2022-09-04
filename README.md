@@ -96,4 +96,8 @@ _220805_ ~ _220830_
   - [ ] EXCEL/PDF Manager
 
 - Chat
+
   - [ ] Subscription Setup
+
+- Session
+  - [ ] Login Cookie Setup

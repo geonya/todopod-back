@@ -15,6 +15,7 @@ export class AuthGuard implements CanActivate {
     )
     if (!roles) return true
     const gqlContext = GqlExecutionContext.create(context).getContext()
+    console.log(gqlContext)
     const user: User = gqlContext['user']
     if (roles.includes('Any')) {
       return true

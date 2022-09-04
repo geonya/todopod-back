@@ -1,8 +1,9 @@
-import { Injectable, NestMiddleware } from '@nestjs/common';
-import { NextFunction } from 'express';
-import { UserService } from '../user/user.service';
-import { JWT_TOKEN } from './jwt.constats';
-import { JwtService } from './jwt.service';
+import { Injectable, NestMiddleware } from '@nestjs/common'
+import { GqlExecutionContext } from '@nestjs/graphql'
+import { NextFunction, Request } from 'express'
+import { UserService } from '../user/user.service'
+import { JWT_TOKEN } from './jwt.constats'
+import { JwtService } from './jwt.service'
 
 @Injectable()
 export class JwtMiddleware implements NestMiddleware {
@@ -13,17 +14,21 @@ export class JwtMiddleware implements NestMiddleware {
 
   async use(req: Request, res: Response, next: NextFunction) {
     if (JWT_TOKEN in req.headers) {
-      const token = req.headers[JWT_TOKEN];
+      const token = req.headers[JWT_TOKEN] as string
+      req.cookies('session', token, {
+        path: '/',
+        httpOnly: true,
+      })
       try {
-        const decoded = this.jwtService.verify(token);
+        const decoded = this.jwtService.verify(token)
         if (typeof decoded === 'object' && decoded.hasOwnProperty('id')) {
-          const { user } = await this.userService.findUserById(decoded['id']);
-          req['user'] = user;
+          const { user } = await this.userService.findUserById(decoded['id'])
+          req['user'] = user
         }
       } catch (error) {
-        console.error(error);
+        console.error(error)
       }
     }
-    next();
+    next()
   }
 }

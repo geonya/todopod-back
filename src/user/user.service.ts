@@ -19,6 +19,7 @@ import { VerifyEmailInput, VerifyEmailOutput } from './dtos/verify-email.dto'
 import { Verification } from './entities/verification.entity'
 import { EmailService } from '../email/email.service'
 import { VERIFY_EMAIL_SUBJECT } from '../email/constants/send-email.constants'
+import { GqlExecutionContext, GraphQLExecutionContext } from '@nestjs/graphql'
 
 @Injectable()
 export class UserService {
@@ -70,7 +71,10 @@ export class UserService {
     }
   }
 
-  async login(loginInput: LoginInput): Promise<LoginOutput> {
+  async login(
+    loginInput: LoginInput,
+    context: GqlExecutionContext,
+  ): Promise<LoginOutput> {
     try {
       const user = await this.users.findOne({
         where: { email: loginInput.email },
@@ -89,6 +93,7 @@ export class UserService {
         }
       }
       const token = this.jwtService.sign(user.id)
+
       return {
         ok: true,
         token,
