@@ -20,6 +20,7 @@ import { Verification } from './entities/verification.entity'
 import { EmailService } from '../email/email.service'
 import { VERIFY_EMAIL_SUBJECT } from '../email/constants/send-email.constants'
 import { GqlExecutionContext, GraphQLExecutionContext } from '@nestjs/graphql'
+import { CookieOptions, Request, Response } from 'express'
 
 @Injectable()
 export class UserService {
@@ -73,7 +74,7 @@ export class UserService {
 
   async login(
     loginInput: LoginInput,
-    context: GqlExecutionContext,
+    ctx: { res: Response; req: Request },
   ): Promise<LoginOutput> {
     try {
       const user = await this.users.findOne({
@@ -93,7 +94,10 @@ export class UserService {
         }
       }
       const token = this.jwtService.sign(user.id)
-
+      const cookieOptions: CookieOptions = {
+        path: '/',
+      }
+      ctx.res.cookie('todopod-session', token, cookieOptions)
       return {
         ok: true,
         token,

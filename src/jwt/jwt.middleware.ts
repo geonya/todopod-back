@@ -15,10 +15,6 @@ export class JwtMiddleware implements NestMiddleware {
   async use(req: Request, res: Response, next: NextFunction) {
     if (JWT_TOKEN in req.headers) {
       const token = req.headers[JWT_TOKEN] as string
-      req.cookies('session', token, {
-        path: '/',
-        httpOnly: true,
-      })
       try {
         const decoded = this.jwtService.verify(token)
         if (typeof decoded === 'object' && decoded.hasOwnProperty('id')) {

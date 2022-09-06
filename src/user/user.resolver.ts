@@ -1,17 +1,6 @@
-import { Req, Res, UseGuards } from '@nestjs/common'
-import {
-  Args,
-  Context,
-  GqlContextType,
-  GqlExecutionContext,
-  GraphQLExecutionContext,
-  Mutation,
-  Query,
-  Resolver,
-} from '@nestjs/graphql'
-import { Request } from 'express'
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql'
+import { Request, Response } from 'express'
 import { AuthUser } from '../auth/auth-user.decorator'
-import { AuthGuard } from '../auth/auth.guard'
 import { Role } from '../auth/role.decorator'
 import {
   CreateAccountInput,
@@ -62,9 +51,9 @@ export class UserResolver {
   @Mutation((returns) => LoginOutput)
   login(
     @Args('input') loginInput: LoginInput,
-    @Context() context: GqlExecutionContext,
+    @Context() ctx: { res: Response; req: Request },
   ): Promise<LoginOutput> {
-    return this.userService.login(loginInput, context)
+    return this.userService.login(loginInput, ctx)
   }
 
   @Mutation((returns) => EditAccountOutput)

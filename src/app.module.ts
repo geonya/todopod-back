@@ -6,7 +6,7 @@ import {
   RequestMethod,
 } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
-import { CONTEXT, GraphQLModule } from '@nestjs/graphql'
+import { GraphQLModule } from '@nestjs/graphql'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import * as Joi from 'joi'
 import { UserModule } from './user/user.module'
@@ -20,8 +20,6 @@ import { TodoModule } from './todo/todo.module'
 import { PhotoModule } from './photo/photo.module'
 import { graphqlUploadExpress } from 'graphql-upload-minimal'
 import { TeamModule } from './team/team.module'
-import * as cookieParser from 'cookie-parser'
-import { JWT_TOKEN } from './jwt/jwt.constats'
 
 @Module({
   imports: [
@@ -61,8 +59,12 @@ import { JWT_TOKEN } from './jwt/jwt.constats'
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
-      context: ({ req, res }) => ({ cookie: res.cookie }),
+      context: ({ req, res }) => ({ req, res }),
       bodyParserConfig: false,
+      cors: {
+        credentials: true,
+        origin: true,
+      },
     }),
     JwtModule.forRoot({
       privateKey: process.env.PRIVATE_KEY,
@@ -85,7 +87,7 @@ import { JWT_TOKEN } from './jwt/jwt.constats'
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(JwtMiddleware, graphqlUploadExpress(), cookieParser())
+      .apply(JwtMiddleware, graphqlUploadExpress())
       .forRoutes({ path: '/graphql', method: RequestMethod.POST })
   }
 }
