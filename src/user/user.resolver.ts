@@ -16,6 +16,7 @@ import {
   FindUserByIdOutput,
 } from './dtos/find-user-by-id.dto'
 import { LoginInput, LoginOutput } from './dtos/login.dto'
+import { LogoutOutput } from './dtos/logout.dto'
 import { MyProfileOutput } from './dtos/myProfile.dto'
 import { VerifyEmailInput, VerifyEmailOutput } from './dtos/verify-email.dto'
 import { User } from './entities/user.entity'
@@ -54,6 +55,13 @@ export class UserResolver {
     @Context() ctx: { res: Response; req: Request },
   ): Promise<LoginOutput> {
     return this.userService.login(loginInput, ctx)
+  }
+
+  @Mutation((returns) => LogoutOutput)
+  logout(
+    @Context() ctx: { res: Response; req: Request },
+  ): Promise<LogoutOutput> {
+    return this.userService.logout(ctx)
   }
 
   @Mutation((returns) => EditAccountOutput)

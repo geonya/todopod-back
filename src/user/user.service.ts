@@ -21,6 +21,8 @@ import { EmailService } from '../email/email.service'
 import { VERIFY_EMAIL_SUBJECT } from '../email/constants/send-email.constants'
 import { GqlExecutionContext, GraphQLExecutionContext } from '@nestjs/graphql'
 import { CookieOptions, Request, Response } from 'express'
+import { JWT_TOKEN } from '../jwt/jwt.constats'
+import { LogoutOutput } from './dtos/logout.dto'
 
 @Injectable()
 export class UserService {
@@ -94,10 +96,13 @@ export class UserService {
         }
       }
       const token = this.jwtService.sign(user.id)
+
+      // session cookie set
       const cookieOptions: CookieOptions = {
         path: '/',
       }
-      ctx.res.cookie('todopod-session', token, cookieOptions)
+      ctx.res.cookie(JWT_TOKEN, token, cookieOptions)
+
       return {
         ok: true,
         token,
@@ -107,6 +112,20 @@ export class UserService {
       return {
         ok: false,
         error: errorMessage.ko.common.internalError + 'login',
+      }
+    }
+  }
+  async logout(ctx: { res: Response; req: Request }): Promise<LogoutOutput> {
+    try {
+      ctx.res.clearCookie(JWT_TOKEN)
+      return {
+        ok: true,
+      }
+    } catch (error) {
+      console.error(error)
+      return {
+        ok: false,
+        error: 'Logout Error',
       }
     }
   }
