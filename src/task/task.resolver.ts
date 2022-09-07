@@ -15,7 +15,7 @@ export class TaskResolver {
   constructor(private readonly taskService: TaskService) {}
 
   @Mutation((returns) => CreateTaskOutput)
-  @Role(['Producer', 'Admin'])
+  @Role(['Any'])
   createTask(
     @AuthUser() creator: User,
     @Args('input') createTaskInput: CreateTaskInput,

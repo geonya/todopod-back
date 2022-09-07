@@ -20,6 +20,7 @@ import { TodoModule } from './todo/todo.module'
 import { PhotoModule } from './photo/photo.module'
 import { graphqlUploadExpress } from 'graphql-upload-minimal'
 import { TeamModule } from './team/team.module'
+import * as cookieParser from 'cookie-parser'
 
 @Module({
   imports: [
@@ -87,7 +88,7 @@ import { TeamModule } from './team/team.module'
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(JwtMiddleware, graphqlUploadExpress())
+      .apply(cookieParser(), JwtMiddleware, graphqlUploadExpress())
       .forRoutes({ path: '/graphql', method: RequestMethod.POST })
   }
 }

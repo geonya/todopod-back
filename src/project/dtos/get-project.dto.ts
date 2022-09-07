@@ -2,7 +2,7 @@ import { Field, InputType, ObjectType, PickType } from '@nestjs/graphql'
 import { CoreOutput } from '../../common/dtos/output.dto'
 import { Project } from '../entities/project.entity'
 
-@InputType('GetProjectInputType')
+@InputType('GetProjectInput')
 export class GetProjectInput extends PickType(Project, ['id']) {}
 
 @ObjectType()

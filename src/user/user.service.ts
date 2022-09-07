@@ -99,10 +99,12 @@ export class UserService {
 
       // session cookie set
       const cookieOptions: CookieOptions = {
+        // TODO - option setup
+        domain: 'localhost',
+        secure: false,
         path: '/',
       }
       ctx.res.cookie(JWT_TOKEN, token, cookieOptions)
-
       return {
         ok: true,
         token,

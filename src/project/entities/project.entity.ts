@@ -48,6 +48,7 @@ export class Project extends CoreEntity {
   @OneToMany((type) => Task, (task) => task.project, {
     nullable: true,
     onDelete: 'SET NULL',
+    eager: true,
   })
   tasks?: Task[]
 

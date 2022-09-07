@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { GqlExecutionContext } from '@nestjs/graphql'
 import { User } from '../user/entities/user.entity'
-import { ALLOWED_ROLES } from './auth.constants'
+import { ALLOWED_ROLES, USER } from './auth.constants'
 import { AllowedRoles } from './role.decorator'
 
 @Injectable()
@@ -16,7 +16,7 @@ export class AuthGuard implements CanActivate {
     if (!roles) return true
     const gqlContext = GqlExecutionContext.create(context).getContext()
     const { req } = gqlContext
-    const user: User = req['user']
+    const user: User = req[USER]
     if (roles.includes('Any')) {
       return true
     }

@@ -15,6 +15,7 @@ _220805_ ~ _220830_
 - [x] common core entity
 - [x] common output dto
 - [x] user model / service / resolver testing
+- [ ] Session - Cache
 
 ## Modeling
 

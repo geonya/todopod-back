@@ -2,6 +2,7 @@ import { Injectable, NestMiddleware } from '@nestjs/common'
 import { GqlExecutionContext } from '@nestjs/graphql'
 import * as cookieParser from 'cookie-parser'
 import { NextFunction, Request } from 'express'
+import { USER } from '../auth/auth.constants'
 import { UserService } from '../user/user.service'
 import { JWT_TOKEN } from './jwt.constats'
 import { JwtService } from './jwt.service'
@@ -20,7 +21,7 @@ export class JwtMiddleware implements NestMiddleware {
         const decoded = this.jwtService.verify(token)
         if (typeof decoded === 'object' && decoded.hasOwnProperty('id')) {
           const { user } = await this.userService.findUserById(decoded['id'])
-          req['user'] = user
+          req[USER] = user
         }
       } catch (error) {
         console.error(error)

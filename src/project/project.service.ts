@@ -228,12 +228,12 @@ export class ProjectService {
           error: errorMessage.ko.project.notFound,
         }
       }
-      if (user.id !== project.creatorId) {
-        return {
-          ok: false,
-          error: errorMessage.ko.project.notAuthorized,
-        }
-      }
+      // if (user.id !== project.creatorId) {
+      //   return {
+      //     ok: false,
+      //     error: errorMessage.ko.project.notAuthorized,
+      //   }
+      // }
       return {
         ok: true,
         project,
