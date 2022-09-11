@@ -30,6 +30,7 @@ export class EmailService {
       }
       await mg.messages().send(data, (error, body) => {
         if (error) {
+          console.error(error)
           throw new Error(error.message)
         }
       })
