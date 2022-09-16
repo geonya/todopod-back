@@ -1,8 +1,8 @@
-import { InputType, ObjectType, PartialType, PickType } from '@nestjs/graphql';
-import { CoreOutput } from '../../common/dtos/output.dto';
-import { User } from '../entities/user.entity';
+import { InputType, ObjectType, PartialType, PickType } from '@nestjs/graphql'
+import { CoreOutput } from '../../common/dtos/output.dto'
+import { User } from '../entities/user.entity'
 
-@InputType('EditAccountInputType')
+@InputType('EditAccountInput')
 export class EditAccountInput extends PartialType(
   PickType(User, [
     'name',
