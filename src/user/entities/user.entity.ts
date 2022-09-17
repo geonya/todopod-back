@@ -1,6 +1,6 @@
 import { InternalServerErrorException } from '@nestjs/common'
 import { Field, InputType, ObjectType, registerEnumType } from '@nestjs/graphql'
-import { IsEmail, IsEnum, IsString, Length } from 'class-validator'
+import { IsEmail, IsEnum, IsOptional, IsString, Length } from 'class-validator'
 import {
   BeforeInsert,
   BeforeUpdate,
@@ -19,6 +19,16 @@ import { Todo } from '../../todo/entities/todo.entity'
 import { Photo } from '../../photo/entities/photo.entity'
 import { Team } from '../../team/entities/team.entity'
 
+@InputType('AvatarInput', { isAbstract: true })
+@ObjectType()
+export class Avatar {
+  @Field((type) => String)
+  url: string
+
+  @Field((type) => String)
+  key: string
+}
+
 export enum UserRole {
   Client = 'Client',
   Producer = 'Producer',
@@ -26,7 +36,7 @@ export enum UserRole {
 }
 registerEnumType(UserRole, { name: 'UserRole' })
 
-@InputType('UserInputType', { isAbstract: true })
+@InputType('UserInput', { isAbstract: true })
 @ObjectType()
 @Entity()
 export class User extends CoreEntity {
@@ -57,10 +67,9 @@ export class User extends CoreEntity {
   @IsString()
   address?: string
 
-  @Column({ nullable: true })
-  @Field((type) => String, { nullable: true })
-  @IsString()
-  avatar?: string
+  @Column({ type: 'json', nullable: true })
+  @Field((type) => Avatar, { nullable: true })
+  avatar?: Avatar
 
   @Column({
     type: 'enum',
@@ -93,6 +102,7 @@ export class User extends CoreEntity {
   @OneToMany((type) => Todo, (todo) => todo.user, { nullable: true })
   todos: Todo[]
 
+  @Column({ default: false })
   @Field((type) => Boolean, { defaultValue: false })
   verified: boolean
 
@@ -113,11 +123,13 @@ export class User extends CoreEntity {
   @BeforeInsert()
   @BeforeUpdate()
   async hashPassword(): Promise<void> {
-    try {
-      this.password = await bcrypt.hash(this.password, 10)
-    } catch (error) {
-      console.error(error)
-      throw new InternalServerErrorException('hashPassword error')
+    if (this.password) {
+      try {
+        this.password = await bcrypt.hash(this.password, 10)
+      } catch (error) {
+        console.error(error)
+        throw new InternalServerErrorException('hashPassword error')
+      }
     }
   }
   async checkPassword(aPassword: string): Promise<boolean> {

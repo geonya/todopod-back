@@ -18,6 +18,10 @@ import {
 import { LoginInput, LoginOutput } from './dtos/login.dto'
 import { LogoutOutput } from './dtos/logout.dto'
 import { MyProfileOutput } from './dtos/myProfile.dto'
+import {
+  SendVerificationEmailInput,
+  SendVerificationEmailOutput,
+} from './dtos/send-verification-email.dto'
 import { VerifyEmailInput, VerifyEmailOutput } from './dtos/verify-email.dto'
 import { User } from './entities/user.entity'
 import { UserService } from './user.service'
@@ -88,5 +92,14 @@ export class UserResolver {
     @Args('input') verifyEmailInput: VerifyEmailInput,
   ): Promise<VerifyEmailOutput> {
     return this.userService.verifyEmail(verifyEmailInput)
+  }
+
+  @Mutation((returns) => SendVerificationEmailOutput)
+  @Role(['Any'])
+  sendVerificationEmail(
+    @AuthUser() user: User,
+    @Args('input') sendVerificationEmail: SendVerificationEmailInput,
+  ): Promise<SendVerificationEmailOutput> {
+    return this.userService.sendVerificationEmail(user, sendVerificationEmail)
   }
 }

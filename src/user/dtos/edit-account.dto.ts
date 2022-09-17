@@ -1,4 +1,11 @@
-import { InputType, ObjectType, PartialType, PickType } from '@nestjs/graphql'
+import {
+  Field,
+  InputType,
+  ObjectType,
+  PartialType,
+  PickType,
+} from '@nestjs/graphql'
+import { FileUpload, GraphQLUpload } from 'graphql-upload-minimal'
 import { CoreOutput } from '../../common/dtos/output.dto'
 import { User } from '../entities/user.entity'
 
@@ -13,7 +20,10 @@ export class EditAccountInput extends PartialType(
     'avatar',
     'role',
   ]),
-) {}
+) {
+  @Field((type) => GraphQLUpload, { nullable: true })
+  file?: Promise<FileUpload>
+}
 
 @ObjectType()
 export class EditAccountOutput extends CoreOutput {}

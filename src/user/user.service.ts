@@ -23,6 +23,13 @@ import { GqlExecutionContext, GraphQLExecutionContext } from '@nestjs/graphql'
 import { CookieOptions, Request, Response } from 'express'
 import { JWT_TOKEN } from '../jwt/jwt.constats'
 import { LogoutOutput } from './dtos/logout.dto'
+import {
+  SendVerificationEmailInput,
+  SendVerificationEmailOutput,
+} from './dtos/send-verification-email.dto'
+import { createReadStream } from 'fs'
+import { S3 } from 'aws-sdk'
+import { ConfigService } from '@nestjs/config'
 
 @Injectable()
 export class UserService {
@@ -32,6 +39,7 @@ export class UserService {
     private readonly verifications: Repository<Verification>,
     private readonly jwtService: JwtService,
     private readonly eMailService: EmailService,
+    private readonly configService: ConfigService,
   ) {}
 
   async createAccount(
@@ -170,7 +178,16 @@ export class UserService {
 
   async editAccount(
     id: number,
-    { name, email, password, address, company, avatar, role }: EditAccountInput,
+    {
+      name,
+      email,
+      password,
+      address,
+      company,
+      avatar,
+      role,
+      file,
+    }: EditAccountInput,
   ): Promise<EditAccountOutput> {
     try {
       const { user, error } = await this.findUserById(id)
@@ -180,10 +197,10 @@ export class UserService {
           error,
         }
       }
-      if (name) {
+      if (name !== user.email) {
         user.name = name
       }
-      if (email) {
+      if (email !== user.email) {
         const existingUser = await this.users.findOne({ where: { email } })
         if (existingUser) {
           return {
@@ -216,12 +233,38 @@ export class UserService {
       if (company) {
         user.company = company
       }
-      if (avatar) {
-        user.avatar = avatar
-      }
       if (role) {
         user.role = role
       }
+
+      if (file) {
+        const readStream = (await file).createReadStream()
+        const s3 = new S3()
+        const uploadResult = await s3
+          .upload({
+            Bucket: this.configService.get('AWS_PUBLIC_BUCKET_NAME'),
+            Body: readStream,
+            Key: `avatars/${user.id}-${Date.now()}`,
+          })
+          .promise()
+        const avatar = {
+          url: uploadResult.Location,
+          key: uploadResult.Key,
+        }
+        user.avatar = avatar
+      }
+
+      if (file === null && user.avatar) {
+        const s3 = new S3()
+        await s3
+          .deleteObject({
+            Bucket: this.configService.get('AWS_PUBLIC_BUCKET_NAME'),
+            Key: user.avatar.key,
+          })
+          .promise()
+        user.avatar = null
+      }
+
       await this.users.save(user)
       return {
         ok: true,
@@ -273,7 +316,8 @@ export class UserService {
         where: { code },
         relations: { user: true },
       })
-      if (verification) {
+
+      if (verification.id) {
         verification.user.verified = true
         await this.users.save(verification.user)
         await this.verifications.delete(verification.id)
@@ -285,6 +329,38 @@ export class UserService {
     } catch (error) {
       console.error(error)
       return { ok: false, error: errorMessage.ko.common + 'verifyEmail' }
+    }
+  }
+
+  async sendVerificationEmail(
+    user: User,
+    { email }: SendVerificationEmailInput,
+  ): Promise<SendVerificationEmailOutput> {
+    try {
+      user.verified = false
+      await this.verifications.delete({ user: { id: user.id } })
+      const verification = await this.verifications.save(
+        this.verifications.create({ user: { id: user.id } }),
+      )
+      await this.eMailService.sendEmail({
+        subject: VERIFY_EMAIL_SUBJECT,
+        to: 'geony@signpod.co.kr', // user.email
+        template: 'email-verify',
+        emailVars: {
+          username: user.name,
+          code: verification.code,
+        },
+      })
+      await this.users.save(user)
+      return {
+        ok: true,
+      }
+    } catch (error) {
+      console.error(error)
+      return {
+        ok: false,
+        error: 'Send Verification Email Internal Error',
+      }
     }
   }
 }

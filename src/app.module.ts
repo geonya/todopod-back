@@ -88,7 +88,11 @@ import * as cookieParser from 'cookie-parser'
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(cookieParser(), JwtMiddleware, graphqlUploadExpress())
+      .apply(
+        cookieParser(),
+        JwtMiddleware,
+        graphqlUploadExpress({ maxFileSize: 1000000, maxFiles: 10 }),
+      )
       .forRoutes({ path: '/graphql', method: RequestMethod.POST })
   }
 }
