@@ -198,6 +198,7 @@ export class ProjectService {
       const [projects, totalProjectsCount] = await this.projects.findAndCount({
         skip: (getProjectsInput.page - 1) * PROJECTS_PER_PAGE,
         take: PROJECTS_PER_PAGE,
+        order: { createdAt: 'DESC' },
       })
       return {
         ok: true,
